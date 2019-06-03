@@ -8,23 +8,14 @@ class HomeController
 
         try {
 
-            $todosRegistros = Lanches::selecionaRegistos();
-
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
+            
+            $variaveis = [];
 
-            if ($todosRegistros != null) {
-                $template = $twig->load('tabelas.html');
+            $template = $twig->load('home.html');
 
-                $parametros = [];
-                $parametros['post'] = $todosRegistros;
-
-                $conteudo = $template->render($parametros);
-            } else {
-                $template = $twig->load('semRegistros.html');
-
-                $conteudo = $template->render();
-            }
+            $conteudo = $template->render($variaveis);
 
             echo $conteudo;
         } catch (Exception $e) {

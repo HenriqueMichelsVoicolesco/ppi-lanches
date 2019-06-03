@@ -1,15 +1,29 @@
 <?php 
+session_start();
 
 require_once 'app/core/Core.php';
 require_once 'app/controller/HomeController.php';
+require_once 'app/controller/AdminController.php';
+require_once 'app/controller/ErroController.php';
+require_once 'app/controller/LoginController.php';
+require_once 'app/controller/UpdateController.php';
 
-require_once 'app/model/Lanches.php';
+require_once 'app/controller/CreateController.php';
+require_once 'app/controller/ReadController.php';
+require_once 'app/controller/UpdateController.php';
+require_once 'app/controller/DeleteController.php';
+
+require_once 'app/model/Login.php';
+require_once 'app/model/Create.php';
+require_once 'app/model/Read.php';
+require_once 'app/model/Delete.php';
 
 require_once 'lib/Connection.php';
+// require_once 'lib/Session.php';
 
 require_once 'vendor/autoload.php';
 
-$template = file_get_contents('app/template/estrutura.html');
+$template = file_get_contents('app/template/base.html');
 
 $teste = new HomeController;
 
@@ -24,5 +38,3 @@ ob_end_clean();
 $templatePronto = str_replace('{{area_dinamica}}', $saida, $template);
 
 echo $templatePronto;
-
-

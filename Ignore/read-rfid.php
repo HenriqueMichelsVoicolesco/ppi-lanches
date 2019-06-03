@@ -32,7 +32,7 @@ if ($userReads > 2) {
 			codigo_aluno,
 			matricula_aluno,
 			turma_aluno
-			)
+		)
 		SELECT
 			alunos.codigo,
 			alunos.matricula,
@@ -76,5 +76,3 @@ if ($userReads > 2) {
 //     (matricula_aluno = matricula)
 // INNER JOIN turmas ON
 //     (turma_aluno = turma);
-
-?>

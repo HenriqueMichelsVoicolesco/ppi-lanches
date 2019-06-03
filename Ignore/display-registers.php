@@ -3,19 +3,17 @@
 $con = new PDO('mysql:host=localhost;dbname=dblanches', 'root', '');
 
 $query = ('
-	SELECT
-		registros.id_registro,
-		registros.codigo_aluno,
-		registros.matricula_aluno,
-		alunos.nome,
-		turmas.curso,
-		registros.timestamp
-	FROM
-		registros
-	INNER JOIN alunos ON
-		(matricula_aluno = matricula)
-	INNER JOIN turmas ON
-		(turma_aluno = turma);
+SELECT
+    registros.id_registro,
+    registros.codigo_aluno,
+    registros.matricula_aluno,
+    alunos.nome,
+    turmas.id_turma,
+    registros.timestamp
+FROM
+    registros
+INNER JOIN alunos ON(matricula_aluno = matricula)
+INNER JOIN turmas ON(turma_aluno = id_turma);
 	');
 
 $stmt = $con->prepare($query);
