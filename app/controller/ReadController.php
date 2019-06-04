@@ -76,4 +76,17 @@ class ReadController
             echo $e->getMessage();
         }
     }
+
+    public function numRegistros(){
+        
+        try {
+
+            $numRegistros = Read::numeroRegistros();
+
+            echo json_encode($numRegistros);
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    } 
 }

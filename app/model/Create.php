@@ -29,7 +29,7 @@ class Create
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Cadastro efetuado com sucesso!')</script>";
+			return true;
 		} 
 	}
 
@@ -57,7 +57,7 @@ class Create
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Cadastro efetuado com sucesso!')</script>";
+			return true;
 		} 
 	}
 
@@ -86,7 +86,7 @@ class Create
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Cadastro efetuado com sucesso!')</script>";
+			return true;
 		} 
 
 	}

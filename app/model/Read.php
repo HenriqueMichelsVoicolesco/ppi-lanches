@@ -3,6 +3,30 @@
 class Read
 {
 
+	public static function numeroRegistros()
+	{ 
+		$con = Connection::getConn();
+
+		$query = 'SELECT 
+			COUNT(DISTINCT matricula_aluno)
+		AS
+			num_registros
+		FROM
+			registros;';
+
+		$stmt = $con->prepare($query);
+
+		$stmt->execute();
+
+		$resultado = [];
+
+		while ($row = $stmt->fetchObject('Read')) {
+			$resultado[] = $row;
+		}
+
+		return $resultado;
+	}
+
 	public static function selecionarRegistros()
 	{
 

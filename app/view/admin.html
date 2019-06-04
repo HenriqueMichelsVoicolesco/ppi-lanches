@@ -1,42 +1,75 @@
-  <nav class="navbar navbar-dark bg-dark sticky-top">
-    <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="#">
-        <i class="fa d-inline fa-lg fa-circle-o"></i>
-        <b> IFFar</b>
-      </a> </div>
-  </nav>
-  <div class="py-5 text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-light">Bem-Vindo {{dados.nome}}! <a class="text-light" href="?pagina=admin">SAIR</a></h1>
-        </div>
+<nav class="navbar navbar-dark bg-dark sticky-top">
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="#">
+      <i class="fa d-inline fa-lg fa-circle-o"></i>
+      <b> IFFar</b>
+    </a> </div>
+</nav>
+{% if operacao == 'deletado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro deletado com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'criado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro inserido com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'atualizado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro atualizado com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'erro' %}
+<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+  Erro ao executar operação!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+<div class="py-5 text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-light">Bem-Vindo {{dados.nome}}! <a class="text-light"
+            href="?pagina=admin&metodo=logout">SAIR</a></h1>
       </div>
     </div>
   </div>
-  <div class="py-3 bg-light h-100">
-    <div class="container text-center">
-      <div class="row">
-        <div class="p-4 col-md-12 border border-info mb-3" >
-          <h4> <b>Contador de Lanches</b></h4>
-          <p>0</p>
-        </div>
-        <div class="p-4 col-md-6 border border-info" >
-          <h4> <b>Exibir Registros</b></h4>
-          <p>Mostrar lista com todos os alunos que pediram lanche hoje.</p><a class="btn btn-primary" href="?pagina=read">Exibir</a>
-        </div>
-        <div class="p-4 col-md-6 border border-info" >
-          <h4> <b>Adicionar Alunos/Servidores/Turmas</b></h4>
-          <p>Inserir novos alunos, servidores ou turmas para retirada do lanche ou controle.</p><a class="btn btn-primary" href="?pagina=create">Adicionar</a>
-        </div>
-        <div class="p-4 col-md-6 border border-info" >
-          <h4> <b>Modificar Turmas</b></h4>
-          <p>Editar dados das turmas. Ex: Dias do lanche, Nome...</p><a class="btn btn-primary" href="?pagina=read&metodo=turmas">Modificar</a>
-        </div>
-        <div class="p-4 col-md-6 border border-info" >
-          <h4> <b>Modificar Alunos/Servidores</b></h4>
-          <p>Editar dados dos alunos e servidores. Ex: Nome, Matrícula, Email...</p><a class="btn btn-primary" href="?pagina=read&metodo=usuarios">Modificar</a>
-        </div>
+</div>
+<div class="py-3 bg-light h-100">
+  <div class="container text-center">
+    <div class="row">
+      <div class="p-4 col-md-12 border border-info mb-3">
+        <h4> <b>Contador de Lanches</b></h4>
+        <p>0</p>
+      </div>
+      <div class="p-4 col-md-6 border border-info">
+        <h4> <b>Exibir Registros</b></h4>
+        <p>Mostrar lista com todos os alunos que pediram lanche hoje.</p><a class="btn btn-primary"
+          href="?pagina=read">Exibir</a>
+      </div>
+      <div class="p-4 col-md-6 border border-info">
+        <h4> <b>Adicionar Alunos/Servidores/Turmas</b></h4>
+        <p>Inserir novos alunos, servidores ou turmas para retirada do lanche ou controle.</p><a class="btn btn-primary"
+          href="?pagina=create">Adicionar</a>
+      </div>
+      <div class="p-4 col-md-6 border border-info">
+        <h4> <b>Modificar Turmas</b></h4>
+        <p>Editar dados das turmas. Ex: Dias do lanche, Nome...</p><a class="btn btn-primary"
+          href="?pagina=read&metodo=turmas">Modificar</a>
+      </div>
+      <div class="p-4 col-md-6 border border-info">
+        <h4> <b>Modificar Alunos/Servidores</b></h4>
+        <p>Editar dados dos alunos e servidores. Ex: Nome, Matrícula, Email...</p><a class="btn btn-primary"
+          href="?pagina=read&metodo=usuarios">Modificar</a>
       </div>
     </div>
   </div>
-  
+</div>

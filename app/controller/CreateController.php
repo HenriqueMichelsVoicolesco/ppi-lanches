@@ -5,45 +5,43 @@ class CreateController
 
     public function index()
     {
+        try {
+            $dados = Read::selecionarTurmas();
 
-        $dados = Read::selecionarTurmas();
-        
-        $loader = new \Twig\Loader\FilesystemLoader('app/view');
-        $twig = new \Twig\Environment($loader);
+            $loader = new \Twig\Loader\FilesystemLoader('app/view');
+            $twig = new \Twig\Environment($loader);
 
-        $template = $twig->load('adicionar.html');
+            $template = $twig->load('adicionar.html');
 
-        $variaveis = [];
-        $variaveis['dados'] = $dados;
+            $variaveis = [];
+            $variaveis['dados'] = $dados;
 
-        $conteudo = $template->render($variaveis);
+            $conteudo = $template->render($variaveis);
 
-        echo $conteudo;
+            echo $conteudo;
+            
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function aluno($params)
     {
 
         $matricula = $_POST['matricula'];
-		$nome = $_POST['nome_aluno'];
-		$rfid = $_POST['rfid'];
-		$turma = $_POST['turma'];
+        $nome = $_POST['nome_aluno'];
+        $rfid = $_POST['rfid'];
+        $turma = $_POST['turma'];
 
         try {
 
-            Create::cadastrarAluno($params, $matricula, $nome, $rfid, $turma);
+            $status = Create::cadastrarAluno($params, $matricula, $nome, $rfid, $turma);
 
-            // $loader = new \Twig\Loader\FilesystemLoader('app/view');
-            // $twig = new \Twig\Environment($loader);
-
-            // $template = $twig->load('admin.html');
-
-            // $variaveis = [];
-            // $variaveis['nomes'] = $resultado;
-
-            // $conteudo = $template->render($variaveis);
-
-            // echo $conteudo;
+            if ($status) {
+                header('Location: ?pagina=admin&operacao=criado');
+            } else {
+                header('Location: ?pagina=admin&operacao=erro');
+            }
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -53,22 +51,42 @@ class CreateController
     {
 
         $email = $_POST['email'];
-		$nome = $_POST['nome_servidor'];
-		$senha = $_POST['senha'];
+        $nome = $_POST['nome_servidor'];
+        $senha = $_POST['senha'];
 
-        Create::cadastrarServidor($email, $nome, $senha);
+        try {
 
+            $status = Create::cadastrarServidor($email, $nome, $senha);
+
+            if ($status) {
+                header('Location: ?pagina=admin&operacao=criado');
+            } else {
+                header('Location: ?pagina=admin&operacao=erro');
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 
     public function turma()
     {
 
         $curso = $_POST['curso'];
-		$semestre = $_POST['semestre'];
+        $semestre = $_POST['semestre'];
         $modalidade = $_POST['modalidade'];
         $diasLanche = implode(",", $_POST['diasLanche']);
 
-        Create::cadastrarTurma($curso, $semestre, $modalidade, $diasLanche);
-        
+        try {
+
+            $status = Create::cadastrarTurma($curso, $semestre, $modalidade, $diasLanche);
+
+            if ($status) {
+                header('Location: ?pagina=admin&operacao=criado');
+            } else {
+                header('Location: ?pagina=admin&operacao=erro');
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
 }

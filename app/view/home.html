@@ -6,12 +6,12 @@
             <div class="card-body">
               <h1 class="card-title text-center"><b>Instituto Federal Farroupilha | Lanches</b></h1>
               <h6 class="card-subtitle my-2 text-body">Bem-Vindo! Faça login para entrar no painel administrativo dos lanches do Campus Avançado Uruguaiana</h6>
-              {% if dados == 'error' %}
+              {% if dados == 'erro' %}
               <div class="alert alert-danger" role="alert">
                 Email ou senha incorreto!
               </div>
               {% endif %}
-              <form class="" method="POST" action="?pagina=admin">
+              <form class="" method="POST" action="?pagina=admin&metodo=login">
                 <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control" placeholder="Insira o email" required="required" name="email" id="email"> </div>
                 <div class="form-group"> <label>Senha</label><input type="password" class="form-control form-control-sm" placeholder="Insira sua senha" required="required" name="senha"><small class="form-text text-muted">Nunca compartilhe sua senha com ninguém!</small> </div> <button type="submit" class="btn btn-primary">Entrar</button>
               </form>

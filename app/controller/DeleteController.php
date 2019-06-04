@@ -9,6 +9,7 @@ class DeleteController
         try {
 
             Delete::deletarAluno($params);
+            header('Location: ?pagina=admin&operacao=deletado');
 
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -21,6 +22,7 @@ class DeleteController
         try {
 
             Delete::deletarServidor($params);
+            header('Location: ?pagina=admin&operacao=deletado');
 
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -34,6 +36,7 @@ class DeleteController
         try {
 
             Delete::deletarTurma($params);
+            header('Location: ?pagina=admin&operacao=deletado');
 
         } catch (Exception $e) {
             echo $e->getMessage();

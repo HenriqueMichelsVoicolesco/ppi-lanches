@@ -27,9 +27,10 @@ class Login
 		$resultado = $stmt->fetchObject('Login');
 
 		if ($selectedRows > 0) {
-			$_SESSION['nome'] = $resultado;
+			$_SESSION['nome'] = serialize($resultado);
+			return true;
 		}
 
-		return $resultado;
+		// return $resultado;
 	}
 }

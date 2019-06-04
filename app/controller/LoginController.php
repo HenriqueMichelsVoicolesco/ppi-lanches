@@ -5,20 +5,22 @@ class LoginController
 
     public function index()
     {
-
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
-
+        
         try {
-
-            $dados = Login::logar($email, $senha);
-
-            if ($dados) {
-                self::login();
+            
+            if (isset($_POST['email']) && isset($_POST['senha'])) {
+                $email = $_POST['email'];
+                $senha = $_POST['senha'];
             }
-
-
-        } catch (Exception $e) {
+                $dados = Login::logar($email, $senha);
+                
+                if ($dados && !$_SESSION['nome']) {
+                    self::login();
+                }
+                
+                
+                
+            } catch (Exception $e) {
             echo $e->getMessage();
         }
     }

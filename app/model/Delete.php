@@ -24,7 +24,7 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Deleção efetuada com sucesso!')</script>";
+			return true;
 		} 
 	}
 
@@ -49,7 +49,7 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Deleção efetuada com sucesso!')</script>";
+			return true;
 		} 
 	}
 
@@ -74,7 +74,7 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Deleção efetuada com sucesso!')</script>";
+			return true;
 		} 
 	}
 }
