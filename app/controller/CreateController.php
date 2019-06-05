@@ -6,6 +6,9 @@ class CreateController
     public function index()
     {
         try {
+
+            Session::verificaLogin();
+
             $dados = Read::selecionarTurmas();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
@@ -19,7 +22,6 @@ class CreateController
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-            
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -28,12 +30,14 @@ class CreateController
     public function aluno($params)
     {
 
-        $matricula = $_POST['matricula'];
-        $nome = $_POST['nome_aluno'];
-        $rfid = $_POST['rfid'];
-        $turma = $_POST['turma'];
-
         try {
+
+            Session::verificaLogin();
+
+            $matricula = $_POST['matricula'];
+            $nome = $_POST['nome_aluno'];
+            $rfid = $_POST['rfid'];
+            $turma = $_POST['turma'];
 
             $status = Create::cadastrarAluno($params, $matricula, $nome, $rfid, $turma);
 
@@ -50,11 +54,13 @@ class CreateController
     public function servidor()
     {
 
-        $email = $_POST['email'];
-        $nome = $_POST['nome_servidor'];
-        $senha = $_POST['senha'];
-
         try {
+
+            Session::verificaLogin();
+
+            $email = $_POST['email'];
+            $nome = $_POST['nome_servidor'];
+            $senha = $_POST['senha'];
 
             $status = Create::cadastrarServidor($email, $nome, $senha);
 
@@ -71,12 +77,14 @@ class CreateController
     public function turma()
     {
 
-        $curso = $_POST['curso'];
-        $semestre = $_POST['semestre'];
-        $modalidade = $_POST['modalidade'];
-        $diasLanche = implode(",", $_POST['diasLanche']);
-
         try {
+
+            Session::verificaLogin();
+
+            $curso = $_POST['curso'];
+            $semestre = $_POST['semestre'];
+            $modalidade = $_POST['modalidade'];
+            $diasLanche = implode(",", $_POST['diasLanche']);
 
             $status = Create::cadastrarTurma($curso, $semestre, $modalidade, $diasLanche);
 

@@ -3,15 +3,10 @@
 
 abstract class Session{
 
-    private static $status;
-
     public static function verificaLogin(){
-        if (session_status() == PHP_SESSION_ACTIVE) {
-            self::$status = true;
-        } else {
-            self::$status = false;
+        if (!isset($_SESSION['nome'])) {
+            header('Location: ?pagina=home');
+            exit;
         }
-
-        return self::$status;
     }
 }

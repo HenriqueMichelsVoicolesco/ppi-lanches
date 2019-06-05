@@ -19,7 +19,7 @@ require_once 'app/model/Read.php';
 require_once 'app/model/Delete.php';
 
 require_once 'lib/Connection.php';
-// require_once 'lib/Session.php';
+require_once 'lib/Session.php';
 
 require_once 'vendor/autoload.php';
 

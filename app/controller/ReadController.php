@@ -8,6 +8,8 @@ class ReadController
 
         try {
 
+            Session::verificaLogin();
+
             $dados = Read::selecionarRegistros();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
@@ -31,6 +33,8 @@ class ReadController
 
         try {
 
+            Session::verificaLogin();
+
             $dados = Read::selecionarTurmas();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
@@ -53,6 +57,7 @@ class ReadController
     public function usuarios(){
 
         try {
+            Session::verificaLogin();
 
             $dadosAlunos = Read::selecionarAlunos();
             $dadosServidores = Read::selecionarServidores();

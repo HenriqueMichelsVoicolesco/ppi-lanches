@@ -8,9 +8,10 @@ class DeleteController
 
         try {
 
+            Session::verificaLogin();
+
             Delete::deletarAluno($params);
             header('Location: ?pagina=admin&operacao=deletado');
-
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -21,9 +22,10 @@ class DeleteController
 
         try {
 
+            Session::verificaLogin();
+
             Delete::deletarServidor($params);
             header('Location: ?pagina=admin&operacao=deletado');
-
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -31,13 +33,13 @@ class DeleteController
 
     public function turma($params)
     {
-        var_dump($params);
 
         try {
 
+            Session::verificaLogin();
+
             Delete::deletarTurma($params);
             header('Location: ?pagina=admin&operacao=deletado');
-
         } catch (Exception $e) {
             echo $e->getMessage();
         }

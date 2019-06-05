@@ -3,21 +3,27 @@
 class HomeController
 {
 
-    public function index()
+    public static function index()
     {
 
         try {
 
-            $loader = new \Twig\Loader\FilesystemLoader('app/view');
-            $twig = new \Twig\Environment($loader);
-            
-            $variaveis = [];
+            if (!isset($_SESSION['nome'])) {
 
-            $template = $twig->load('home.html');
+                $loader = new \Twig\Loader\FilesystemLoader('app/view');
+                $twig = new \Twig\Environment($loader);
 
-            $conteudo = $template->render($variaveis);
+                $variaveis = [];
 
-            echo $conteudo;
+                $template = $twig->load('home.html');
+
+                $conteudo = $template->render($variaveis);
+
+                echo $conteudo;
+            } else {
+                header('Location: ?pagina=admin');
+                exit;
+            }
         } catch (Exception $e) {
             echo $e->getMessage();
         }

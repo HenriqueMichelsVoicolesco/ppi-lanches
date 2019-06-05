@@ -42,6 +42,7 @@ class AdminController
 
             if ($status) {
                 header('Location: ?pagina=admin');
+                exit;
             } else {
                 self::index();
             }
