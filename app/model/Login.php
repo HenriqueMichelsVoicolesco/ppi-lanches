@@ -3,7 +3,7 @@
 class Login
 {
 
-	public static function logar($email, $senha)
+	public static function logar($dadosLogin)
 	{
 
 		$con = Connection::getConn();
@@ -18,8 +18,8 @@ class Login
 			senha = ?';
 
 		$stmt = $con->prepare($query);
-		$stmt->bindValue('1', $email);
-		$stmt->bindValue('2', $senha);
+		$stmt->bindValue('1', $dadosLogin['email']);
+		$stmt->bindValue('2', $dadosLogin['senha']);
 
 		$stmt->execute();
 
@@ -31,6 +31,6 @@ class Login
 			return true;
 		}
 
-		// return $resultado;
+		return true;
 	}
 }

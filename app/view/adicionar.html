@@ -20,14 +20,14 @@
           <h4><b>Adicione novos alunos ou servidores ao sistema</b></h4>
           <div class="form-group d-flex justify-content-center pt-3">
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="alunos-check" name="form" class="custom-control-input" value="alunos"><label class="custom-control-label" for="alunos-check">Alunos</label>
+              <input type="radio" id="alunos-check" name="form" class="custom-control-input" value="alunos" {% if dadosTurma == true %} disabled {% endif %}><label class="custom-control-label" for="alunos-check">Alunos</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="servidores-check" name="form" class="custom-control-input" value="servidores"><label class="custom-control-label" for="servidores-check">Servidores</label>
+              <input type="radio" id="servidores-check" name="form" class="custom-control-input" value="servidores" {% if dadosTurma == true %} disabled {% endif %}><label class="custom-control-label" for="servidores-check">Servidores</label>
             </div>
             <div class="form-group">
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="turmas-check" name="form" class="custom-control-input" value="turmas"><label class="custom-control-label" for="turmas-check">Turmas</label>
+                <input type="radio" id="turmas-check" name="form" class="custom-control-input" value="turmas" {% if dadosTurma == true %} checked {% endif %}><label class="custom-control-label" for="turmas-check">Turmas</label>
               </div>
             </div>
           </div>
@@ -53,29 +53,30 @@
             <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control" placeholder="Insira uma senha" id="senha" name="senha" required="required" maxlength="20" minlength="8"> </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
-          <form action="?pagina=create&metodo=turma" method="POST" id="turmas" style="display: none">
-            <div class="form-group"> <label for="curso">Curso</label> <input type="text" class="form-control" placeholder="Insira o nome do curso" required="required" name="curso" id="curso"> </div>
-            <div class="form-group"> <label for="semestre">Semestre</label> <input type="text" class="form-control" placeholder="Insira o semestre" required="required" name="semestre" id="semestre"> </div>
-            <div class="form-group"> <label for="modalidade">Modalidade</label> <input type="text" class="form-control" placeholder="Insira a modalidade" id="modalidade" name="modalidade" required="required"> </div>
+          <form action="{% if dadosTurma == true %} ?pagina=update&metodo=salvarEdicaoTurma {% else %} ?pagina=create&metodo=turma {% endif %}" method="POST" id="turmas" style="display: none">
+            {% if dadosTurma == true %} <input type="hidden" name="id_turma" value="{% for dadosT in dadosTurma %}{{dadosT.id_turma}}{% endfor %}"> {% endif %}
+            <div class="form-group"> <label for="curso">Curso</label> <input type="text" class="form-control" placeholder="Insira o nome do curso" required="required" name="curso" id="curso" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.curso}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="semestre">Semestre</label> <input type="text" class="form-control" placeholder="Insira o semestre" required="required" name="semestre" id="semestre" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.semestre}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="modalidade">Modalidade</label> <input type="text" class="form-control" placeholder="Insira a modalidade" id="modalidade" name="modalidade" required="required" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.modalidade}}{% endfor %}{% endif %}"> </div>
             <div class="form-group"> <label for="segunda">Dias do lanche</label>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="segunda" name="diasLanche[]" value="Segunda-Feira">
+                <input type="checkbox" class="custom-control-input" id="segunda" name="diasLanche[]" value="Segunda-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Segunda-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
                 <label class="custom-control-label" for="segunda">Segunda-Feira</label>
               </div>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="terca" name="diasLanche[]" value="Terça-Feira">
+                <input type="checkbox" class="custom-control-input" id="terca" name="diasLanche[]" value="Terça-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Terça-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
                 <label class="custom-control-label" for="terca">Terça-Feira</label>
               </div>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="quarta" name="diasLanche[]" value="Quarta-Feira">
+                <input type="checkbox" class="custom-control-input" id="quarta" name="diasLanche[]" value="Quarta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quarta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
                 <label class="custom-control-label" for="quarta">Quarta-Feira</label>
               </div>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="quinta" name="diasLanche[]" value="Quinta-Feira">
+                <input type="checkbox" class="custom-control-input" id="quinta" name="diasLanche[]" value="Quinta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quinta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
                 <label class="custom-control-label" for="quinta">Quinta-Feira</label>
               </div>
               <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="sexta" name="diasLanche[]" value="Sexta-Feira">
+                <input type="checkbox" class="custom-control-input" id="sexta" name="diasLanche[]" value="Sexta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Sexta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
                 <label class="custom-control-label" for="sexta">Sexta-Feira</label>
               </div>
             </div>

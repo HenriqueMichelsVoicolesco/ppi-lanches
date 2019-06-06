@@ -3,51 +3,113 @@
 class UpdateController
 {
 
-    public function aluno($params)
+    public function formAluno($params)
     {
+        try {
 
-        $matricula = $_POST['matricula'];
-		$nome = $_POST['nome_aluno'];
-		$rfid = $_POST['rfid'];
-		$turma = $_POST['turma'];
+            Session::verificaLogin();
+
+            $dados = Read::selecionarAlunoPorId($params);
+
+            $loader = new \Twig\Loader\FilesystemLoader('app/view');
+            $twig = new \Twig\Environment($loader);
+
+            $template = $twig->load('adicionar.html');
+
+            $variaveis = [];
+            $variaveis['dados'] = $dados;
+
+            $conteudo = $template->render($variaveis);
+
+            echo $conteudo;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function formServidor($params)
+    {
+        try {
+
+            Session::verificaLogin();
+
+            $dados = Read::selecionarServidorPorId($params);
+
+            $loader = new \Twig\Loader\FilesystemLoader('app/view');
+            $twig = new \Twig\Environment($loader);
+
+            $template = $twig->load('adicionar.html');
+
+            $variaveis = [];
+            $variaveis['dados'] = $dados;
+
+            $conteudo = $template->render($variaveis);
+
+            echo $conteudo;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function formTurma($params)
+    {
+        try {
+
+            Session::verificaLogin();
+
+            $dadosTurma = Read::selecionarTurmaPorId($params);
+            $dados = Read::selecionarTurmas();
+
+            $loader = new \Twig\Loader\FilesystemLoader('app/view');
+            $twig = new \Twig\Environment($loader);
+
+            $template = $twig->load('adicionar.html');
+
+            $variaveis = [];
+            $variaveis['dadosTurma'] = $dadosTurma;
+            $variaveis['dados'] = $dados;
+
+            $conteudo = $template->render($variaveis);
+
+            echo $conteudo;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+
+    public function salvarEdicaoAluno()
+    {
 
         try {
 
-            Update::atualizarAluno($params, $matricula, $nome, $rfid, $turma);
+            Update::atualizarAluno($_POST);
 
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
     
-    public function servidor($params)
+    public function salvarEdicaoServidor()
     {
-
-        $email = $_POST['email'];
-		$nome = $_POST['nome_servidor'];
-		$senha = $_POST['senha'];
 
         try {
 
-            Update::atualizarServidor($params, $email, $nome, $senha);
+            Update::atualizarServidor($_POST);
 
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
     
-    public function turma($params)
+    public function salvarEdicaoTurma()
     {
-
-        $curso = $_POST['curso'];
-		$semestre = $_POST['semestre'];
-        $modalidade = $_POST['modalidade'];
-        $diasLanche = implode(",", $_POST['diasLanche']);
 
         try {
 
-            Update::atualizarTurma($params, $curso, $semestre, $modalidade, $diasLanche);
-
+            Update::atualizarTurma($_POST);
+            header('Location: ?pagina=admin&operacao=atualizado');
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }

@@ -34,11 +34,9 @@ class AdminController
 
     public function login()
     {
-        $email = $_POST['email'];
-        $senha = $_POST['senha'];
 
         try {
-            $status = Login::logar($email, $senha);
+            $status = Login::logar($_POST);
 
             if ($status) {
                 header('Location: ?pagina=admin');

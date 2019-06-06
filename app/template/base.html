@@ -18,6 +18,10 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
+      var test = $('input[name=form]:checked').val();
+        $("form").hide();
+        $("#" + test).show();
+
       $("input[name=form]").on("change", function () {
         var test = $(this).val();
         $("form").hide();

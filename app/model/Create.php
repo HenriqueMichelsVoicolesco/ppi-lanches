@@ -3,9 +3,8 @@
 class Create
 {
 
-	public static function cadastrarAluno($matricula, $nome, $rfid, $turma)
+	public static function cadastrarAluno($dadosAluno)
 	{
-		var_dump($matricula, $nome, $rfid, $turma);
 		$con = Connection::getConn();
 
 		$query = 'INSERT INTO alunos (
@@ -19,10 +18,10 @@ class Create
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $matricula);
-		$stmt->bindParam('2', $nome);
-		$stmt->bindParam('3', $rfid);
-		$stmt->bindParam('4', $turma);
+		$stmt->bindParam('1', $dadosAluno['matricula']);
+		$stmt->bindParam('2', $dadosAluno['nome']);
+		$stmt->bindParam('3', $dadosAluno['rfid']);
+		$stmt->bindParam('4', $dadosAluno['turma']);
 
 		$stmt->execute();
 
@@ -33,7 +32,7 @@ class Create
 		} 
 	}
 
-	public static function cadastrarServidor($email, $nome, $senha)
+	public static function cadastrarServidor($dadosServidor)
 	{
 
 		$con = Connection::getConn();
@@ -48,9 +47,9 @@ class Create
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $email);
-		$stmt->bindParam('2', $nome);
-		$stmt->bindParam('3', $senha);
+		$stmt->bindParam('1', $dadosServidor['email']);
+		$stmt->bindParam('2', $dadosServidor['nome']);
+		$stmt->bindParam('3', $dadosServidor['senha']);
 
 		$stmt->execute();
 
@@ -61,7 +60,7 @@ class Create
 		} 
 	}
 
-	public static function cadastrarTurma($curso, $semestre, $modalidade, $diasLanche)
+	public static function cadastrarTurma($dadosTurma)
 	{
 
 		$con = Connection::getConn();
@@ -77,10 +76,10 @@ class Create
 		
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $curso);
-		$stmt->bindParam('2', $semestre);
-		$stmt->bindParam('3', $modalidade);
-		$stmt->bindParam('4', $diasLanche);
+		$stmt->bindParam('1', $dadosTurma['curso']);
+		$stmt->bindParam('2', $dadosTurma['semestre']);
+		$stmt->bindParam('3', $dadosTurma['modalidade']);
+		$stmt->bindParam('4', $dadosTurma['diasLanche']);
 		$stmt->execute();
 
 		$affectedRows = $stmt->rowCount();

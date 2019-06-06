@@ -128,4 +128,77 @@ class Read
 
 		return $resultado;
 	}
+
+	public static function selecionarTurmaPorId($params)
+	{
+
+		$con = Connection::getConn();
+
+		$query = 'SELECT *
+		FROM
+			turmas
+		WHERE 
+			id_turma = ?;';
+
+		$stmt = $con->prepare($query);
+		$stmt->bindValue('1', $params);
+		$stmt->execute();
+
+		$resultado = [];
+
+		while ($row = $stmt->fetchObject('Read')) {
+			$resultado[] = $row;
+		}
+
+		return $resultado;
+	}
+
+	public static function selecionarAlunoPorId($params)
+	{
+
+		$con = Connection::getConn();
+
+		$query = 'SELECT *
+		FROM
+			alunos
+		WHERE 
+			matricula = ?;';
+
+		$stmt = $con->prepare($query);
+		$stmt->bindValue('1', $params['matricula']);
+		$stmt->execute();
+
+		$resultado = [];
+
+		while ($row = $stmt->fetchObject('Read')) {
+			$resultado[] = $row;
+		}
+
+		return $resultado;
+	}
+
+	public static function selecionarServidorPorId($params)
+	{
+
+		$con = Connection::getConn();
+
+		$query = 'SELECT *
+		FROM
+			servidores
+		WHERE 
+			id_servidor = ?;';
+
+		$stmt = $con->prepare($query);
+		$stmt->bindValue('1', $params['id_servidor']);
+		$stmt->execute();
+
+		$resultado = [];
+
+		while ($row = $stmt->fetchObject('Read')) {
+			$resultado[] = $row;
+		}
+
+		return $resultado;
+	}
+
 }

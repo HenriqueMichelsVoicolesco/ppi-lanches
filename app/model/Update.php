@@ -3,9 +3,9 @@
 class Update
 {
 
-	public static function atualizarAluno($params, $matricula, $nome, $rfid, $turma)
+	public static function atualizarAluno($dadosAluno)
 	{
-		var_dump($matricula, $nome, $rfid, $turma);
+
 		$con = Connection::getConn();
 
 		$query = 'UPDATE
@@ -20,11 +20,11 @@ class Update
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $matricula);
-		$stmt->bindParam('2', $nome);
-		$stmt->bindParam('3', $rfid);
-		$stmt->bindParam('4', $turma);
-		$stmt->bindParam('5', $params);
+		$stmt->bindParam('1', $dadosAluno['matricula']);
+		$stmt->bindParam('2', $dadosAluno['nome']);
+		$stmt->bindParam('3', $dadosAluno['rfid']);
+		$stmt->bindParam('4', $dadosAluno['turma']);
+		$stmt->bindParam('5', $dadosAluno['matricula']);
 
 		$stmt->execute();
 
@@ -35,7 +35,7 @@ class Update
 		} 
 	}
 
-	public static function atualizarServidor($id, $email, $nome, $senha)
+	public static function atualizarServidor($dadosServidor)
 	{
 
 		$con = Connection::getConn();
@@ -51,10 +51,10 @@ class Update
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $email);
-		$stmt->bindParam('2', $nome);
-		$stmt->bindParam('3', $senha);
-		$stmt->bindParam('4', $id);
+		$stmt->bindParam('1', $dadosServidor['email']);
+		$stmt->bindParam('2', $dadosServidor['nome']);
+		$stmt->bindParam('3', $dadosServidor['senha']);
+		$stmt->bindParam('4', $dadosServidor['senha']);
 
 		$stmt->execute();
 
@@ -65,10 +65,12 @@ class Update
 		} 
 	}
 
-	public static function atualizarTurma($id, $curso, $semestre, $modalidade, $diasLanche)
+	public static function atualizarTurma($dadosTurma)
 	{
 
 		$con = Connection::getConn();
+
+		$checkbox = implode(',', $dadosTurma['diasLanche']);
 
 		$query = 'UPDATE
 			turmas
@@ -82,11 +84,11 @@ class Update
 		
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $curso);
-		$stmt->bindParam('2', $semestre);
-		$stmt->bindParam('3', $modalidade);
-		$stmt->bindParam('4', $diasLanche);
-		$stmt->bindParam('5', $id);
+		$stmt->bindParam('1', $dadosTurma['curso']);
+		$stmt->bindParam('2', $dadosTurma['semestre']);
+		$stmt->bindParam('3', $dadosTurma['modalidade']);
+		$stmt->bindParam('4', $checkbox);
+		$stmt->bindParam('5', $dadosTurma['id_turma']);
 
 		$stmt->execute();
 

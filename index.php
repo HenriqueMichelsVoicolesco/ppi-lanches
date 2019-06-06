@@ -16,6 +16,7 @@ require_once 'app/controller/DeleteController.php';
 require_once 'app/model/Login.php';
 require_once 'app/model/Create.php';
 require_once 'app/model/Read.php';
+require_once 'app/model/Update.php';
 require_once 'app/model/Delete.php';
 
 require_once 'lib/Connection.php';

@@ -34,12 +34,7 @@ class CreateController
 
             Session::verificaLogin();
 
-            $matricula = $_POST['matricula'];
-            $nome = $_POST['nome_aluno'];
-            $rfid = $_POST['rfid'];
-            $turma = $_POST['turma'];
-
-            $status = Create::cadastrarAluno($params, $matricula, $nome, $rfid, $turma);
+            $status = Create::cadastrarAluno($_POST);
 
             if ($status) {
                 header('Location: ?pagina=admin&operacao=criado');
@@ -58,11 +53,7 @@ class CreateController
 
             Session::verificaLogin();
 
-            $email = $_POST['email'];
-            $nome = $_POST['nome_servidor'];
-            $senha = $_POST['senha'];
-
-            $status = Create::cadastrarServidor($email, $nome, $senha);
+            $status = Create::cadastrarServidor($_POST);
 
             if ($status) {
                 header('Location: ?pagina=admin&operacao=criado');
@@ -81,12 +72,7 @@ class CreateController
 
             Session::verificaLogin();
 
-            $curso = $_POST['curso'];
-            $semestre = $_POST['semestre'];
-            $modalidade = $_POST['modalidade'];
-            $diasLanche = implode(",", $_POST['diasLanche']);
-
-            $status = Create::cadastrarTurma($curso, $semestre, $modalidade, $diasLanche);
+            $status = Create::cadastrarTurma($_POST);
 
             if ($status) {
                 header('Location: ?pagina=admin&operacao=criado');
