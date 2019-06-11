@@ -121,7 +121,7 @@ class Create
 
 		$stmt->execute();
 
-		$userReads = $stmt->fetch();
+		$userReads = $stmt->fetch(PDO::FETCH_ASSOC);
 		$affectedRows = $stmt->rowCount();
 
 		//URL para testar:
