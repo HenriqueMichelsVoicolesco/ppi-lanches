@@ -8,6 +8,8 @@ class Update
 
 		$con = Connection::getConn();
 
+		var_dump($dadosAluno);
+
 		$query = 'UPDATE
 			alunos
 		SET
@@ -21,7 +23,7 @@ class Update
 		$stmt = $con->prepare($query);
 
 		$stmt->bindParam('1', $dadosAluno['matricula']);
-		$stmt->bindParam('2', $dadosAluno['nome']);
+		$stmt->bindParam('2', $dadosAluno['nome_aluno']);
 		$stmt->bindParam('3', $dadosAluno['rfid']);
 		$stmt->bindParam('4', $dadosAluno['turma']);
 		$stmt->bindParam('5', $dadosAluno['matricula']);
@@ -31,7 +33,8 @@ class Update
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Registro atualizado com sucesso!')</script>";
+			// echo "<script>alert('Registro atualizado com sucesso!')</script>";
+			return true;
 		} 
 	}
 
@@ -52,17 +55,18 @@ class Update
 		$stmt = $con->prepare($query);
 
 		$stmt->bindParam('1', $dadosServidor['email']);
-		$stmt->bindParam('2', $dadosServidor['nome']);
+		$stmt->bindParam('2', $dadosServidor['nome_servidor']);
 		$stmt->bindParam('3', $dadosServidor['senha']);
-		$stmt->bindParam('4', $dadosServidor['senha']);
+		$stmt->bindParam('4', $dadosServidor['id_servidor']);
 
 		$stmt->execute();
 
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Registro atualizado com sucesso!')</script>";
-		} 
+			// echo "<script>alert('Registro atualizado com sucesso!')</script>";
+			return true;
+		}
 	}
 
 	public static function atualizarTurma($dadosTurma)
@@ -95,7 +99,8 @@ class Update
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			echo "<script>alert('Registro atualizado com sucesso!')</script>";
+			// echo "<script>alert('Registro atualizado com sucesso!')</script>";
+			return true;
 		} 
 
 	}

@@ -52,7 +52,7 @@
                         <td>
                           <div class="d-flex justify-content-center">
                             <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
-                                href="?pagina=update&metodo=servidor&id={{servidor.id_servidor}}">Editar</a></div>
+                                href="?pagina=update&metodo=formServidor&id={{servidor.id_servidor}}">Editar</a></div>
                             <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
                                 href="?pagina=delete&metodo=servidor&id={{servidor.id_servidor}}" onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
                           </div>
@@ -73,7 +73,7 @@
               <h5 class="mb-0">
                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
                   data-target="#collapse{{turma.id_turma}}" aria-expanded="false"
-                  aria-controls="collapse{{turma.id_turma}}"> {{turma.curso}} - {{turma.semestre}}</button>
+                  aria-controls="collapse{{turma.id_turma}}"> {{turma.curso}} - {{turma.modalidade}} - {{turma.semestre}}</button>
               </h5>
             </div>
             <div id="collapse{{turma.id_turma}}" class="collapse" aria-labelledby="heading{{turma.id_turma}}"
@@ -105,7 +105,7 @@
                         <td>
                           <div class="d-flex justify-content-center">
                             <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
-                                href="?pagina=update&metodo=aluno&id={{aluno.matricula}}">Editar</a></div>
+                                href="?pagina=update&metodo=formAluno&id={{aluno.matricula}}">Editar</a></div>
                             <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
                                 href="?pagina=delete&metodo=aluno&id={{aluno.matricula}}" onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
                           </div>

@@ -1,5 +1,6 @@
 <?php 
 session_start();
+date_default_timezone_set('America/Sao_Paulo');
 
 require_once 'app/core/Core.php';
 require_once 'app/controller/HomeController.php';

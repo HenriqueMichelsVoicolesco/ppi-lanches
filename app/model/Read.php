@@ -165,7 +165,7 @@ class Read
 			matricula = ?;';
 
 		$stmt = $con->prepare($query);
-		$stmt->bindValue('1', $params['matricula']);
+		$stmt->bindValue('1', $params);
 		$stmt->execute();
 
 		$resultado = [];
@@ -189,7 +189,7 @@ class Read
 			id_servidor = ?;';
 
 		$stmt = $con->prepare($query);
-		$stmt->bindValue('1', $params['id_servidor']);
+		$stmt->bindValue('1', $params);
 		$stmt->execute();
 
 		$resultado = [];
@@ -200,5 +200,9 @@ class Read
 
 		return $resultado;
 	}
+
+	// public static function selecionarHorariosTurma($params){
+
+	// }
 
 }

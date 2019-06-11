@@ -20,14 +20,14 @@
           <h4><b>Adicione novos alunos ou servidores ao sistema</b></h4>
           <div class="form-group d-flex justify-content-center pt-3">
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="alunos-check" name="form" class="custom-control-input" value="alunos" {% if dadosTurma == true %} disabled {% endif %}><label class="custom-control-label" for="alunos-check">Alunos</label>
+              <input type="radio" id="alunos-check" name="form-check" class="custom-control-input" value="alunos" {% if (dadosTurma == false or dadosServidor == false) and dadosAluno == true %} checked {% elseif (dadosTurma == true or dadosServidor == true) and dadosAluno == false %} disabled {% endif %}><label class="custom-control-label" for="alunos-check">Alunos</label>
             </div>
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="servidores-check" name="form" class="custom-control-input" value="servidores" {% if dadosTurma == true %} disabled {% endif %}><label class="custom-control-label" for="servidores-check">Servidores</label>
+              <input type="radio" id="servidores-check" name="form-check" class="custom-control-input" value="servidores" {% if (dadosTurma == false or dadosAluno == false) and dadosServidor == true %} checked {% elseif (dadosTurma == true or dadosAluno == true) and dadosServidor == false %} disabled {% endif %}><label class="custom-control-label" for="servidores-check">Servidores</label>
             </div>
             <div class="form-group">
               <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="turmas-check" name="form" class="custom-control-input" value="turmas" {% if dadosTurma == true %} checked {% endif %}><label class="custom-control-label" for="turmas-check">Turmas</label>
+                <input type="radio" id="turmas-check" name="form-check" class="custom-control-input" value="turmas" {% if (dadosServidor == false or dadosAluno == false) and dadosTurma == true %} checked {% elseif (dadosServidor == true or dadosAluno == true) and dadosTurma == false %} disabled {% endif %}><label class="custom-control-label" for="turmas-check">Turmas</label>
               </div>
             </div>
           </div>
@@ -35,22 +35,24 @@
       </div>
       <div class="row justify-content-center d-flex">
         <div class="col-md-7">
-          <form action="?pagina=create&metodo=aluno" method="POST" id="alunos" style="display: none">
-            <div class="form-group"> <label for="matricula">Matrícula</label> <input type="number" class="form-control" placeholder="Insira a matrícula" required="required" name="matricula" id="matricula" minlength="10" maxlength="10"> </div>
-            <div class="form-group"> <label for="nome_aluno">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do aluno" required="required" name="nome_aluno" id="nome_aluno"> </div>
-            <div class="form-group"> <label for="rfid">RFID</label> <input type="text" class="form-control" placeholder="Insira o código do usuário" id="rfid" name="rfid" required="required"> </div>
+          <form action="{% if dadosAluno == true %} ?pagina=update&metodo=salvarEdicaoAluno {% else %} ?pagina=create&metodo=aluno {% endif %}" method="POST" id="alunos" style="display: none">
+            {% if dadosAluno == true %} <input type="hidden" name="id_servidor" value="{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}"> {% endif %}
+            <div class="form-group"> <label for="matricula">Matrícula</label> <input type="number" class="form-control" placeholder="Insira a matrícula" required="required" name="matricula" id="matricula" minlength="10" maxlength="10" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="nome_aluno">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do aluno" required="required" name="nome_aluno" id="nome_aluno" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.nome}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="rfid">RFID</label> <input type="text" class="form-control" placeholder="Insira o código do usuário" id="rfid" name="rfid" required="required" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.codigo}}{% endfor %}{% endif %}"> </div>
             <div class="form-group"> <label for="turma">Turma</label> <select class="form-control custom-select" required="required" id="turma" name="turma">
                 <option selected="" disabled="" value="Insira a turma do aluno">Insira a turma do aluno</option>
                 {% for turma in dados %}
-                <option value="{{turma.id_turma}}">{{turma.curso}}</option>
+                <option value="{{turma.id_turma}}" {% for dadosA in dadosAluno %}{% if turma.id_turma == dadosA.turma %} selected {% endif %}{% endfor %}>{{turma.curso}} - {{turma.modalidade}} - {{turma.semestre}}</option>
                 {% endfor %}
               </select> </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
-          <form action="?pagina=create&metodo=servidor" method="POST" id="servidores" style="display: none">
-            <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control" placeholder="Insira o email" required="required" name="email" id="email"> </div>
-            <div class="form-group"> <label for="nome_servidor">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do servidor" required="required" name="nome_servidor" id="nome_servidor"> </div>
-            <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control" placeholder="Insira uma senha" id="senha" name="senha" required="required" maxlength="20" minlength="8"> </div>
+          <form action="{% if dadosServidor == true %} ?pagina=update&metodo=salvarEdicaoServidor {% else %} ?pagina=create&metodo=servidor {% endif %}" method="POST" id="servidores" style="display: none">
+            {% if dadosServidor == true %} <input type="hidden" name="id_servidor" value="{% for dadosS in dadosServidor %}{{dadosS.id_servidor}}{% endfor %}"> {% endif %}
+            <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control" placeholder="Insira o email" required="required" name="email" id="email" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.email}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="nome_servidor">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do servidor" required="required" name="nome_servidor" id="nome_servidor" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.nome}}{% endfor %}{% endif %}"> </div>
+            <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control" placeholder="Insira uma senha" id="senha" name="senha" required="required" maxlength="20" minlength="8" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.senha}}{% endfor %}{% endif %}"> </div>
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
           <form action="{% if dadosTurma == true %} ?pagina=update&metodo=salvarEdicaoTurma {% else %} ?pagina=create&metodo=turma {% endif %}" method="POST" id="turmas" style="display: none">

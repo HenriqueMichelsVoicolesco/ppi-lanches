@@ -27,7 +27,7 @@ class CreateController
         }
     }
 
-    public function aluno($params)
+    public function aluno()
     {
 
         try {
@@ -79,6 +79,26 @@ class CreateController
             } else {
                 header('Location: ?pagina=admin&operacao=erro');
             }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    
+    public function registro($params)
+    {
+
+        try {
+
+            $registro = new Create;
+
+            $registro->cadastrarRegistro($params);
+            // Create::cadastrarRegistro($params);
+
+            // if ($status) {
+            //     header('Location: ?pagina=admin&operacao=criado');
+            // } else {
+            //     header('Location: ?pagina=admin&operacao=erro');
+            // }
         } catch (Exception $e) {
             echo $e->getMessage();
         }
