@@ -9,8 +9,9 @@ class UpdateController
             
             Session::verificaLogin();
             
-            $dados = Read::selecionarTurmas();
-            $dadosAluno = Read::selecionarAlunoPorId($params);
+            $dados = new Read;
+            $dadosTurma = $dados->selecionarTurmas();
+            $dadosAluno = $dados->selecionarAlunoPorId($params);
             
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -18,7 +19,7 @@ class UpdateController
             $template = $twig->load('adicionar.html');
 
             $variaveis = [];
-            $variaveis['dados'] = $dados;
+            $variaveis['dados'] = $dadosTurma;
             $variaveis['dadosAluno'] = $dadosAluno;
 
             $conteudo = $template->render($variaveis);
@@ -35,7 +36,8 @@ class UpdateController
 
             Session::verificaLogin();
 
-            $dadosServidor = Read::selecionarServidorPorId($params);
+            $dados = new Read;
+            $dadosServidor = $dados->selecionarServidorPorId($params);
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -59,7 +61,9 @@ class UpdateController
 
             Session::verificaLogin();
 
-            $dadosTurma = Read::selecionarTurmaPorId($params);
+            $dados = new Read;
+            $dadosTurma = $dados->selecionarTurmaPorId($params);
+
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
 
@@ -80,13 +84,12 @@ class UpdateController
 
         try {
 
-            $status = Update::atualizarAluno($_POST);
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            $status = new Update;
 
+            $status = $status->atualizarAluno($_POST);
+
+            header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -97,13 +100,12 @@ class UpdateController
 
         try {
 
-            $status = Update::atualizarServidor($_POST);
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            $status = new Update;
 
+            $status = $status->atualizarServidor($_POST);
+
+            header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -114,12 +116,12 @@ class UpdateController
 
         try {
 
-            $status = Update::atualizarTurma($_POST);
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            $status = new Update;
+
+            $status = $status->atualizarTurma($_POST);
+           
+            header("Location: ?pagina=read&metodo=turmas&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }

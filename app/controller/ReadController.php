@@ -10,7 +10,8 @@ class ReadController
 
             Session::verificaLogin();
 
-            $dados = Read::selecionarRegistros();
+            $dados = new Read;
+            $dados = $dados->selecionarRegistros();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -35,7 +36,8 @@ class ReadController
 
             Session::verificaLogin();
 
-            $dados = Read::selecionarTurmas();
+            $dados = new Read;
+            $dados = $dados->selecionarTurmas();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -45,6 +47,7 @@ class ReadController
             $template = $twig->load('turmas.html');
 
             $variaveis['dados'] = $dados;
+            $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
 
             $conteudo = $template->render($variaveis);
 
@@ -59,9 +62,10 @@ class ReadController
         try {
             Session::verificaLogin();
 
-            $dadosAlunos = Read::selecionarAlunos();
-            $dadosServidores = Read::selecionarServidores();
-            $dadosTurmas = Read::selecionarTurmas();
+            $dados = new Read;
+            $dadosAlunos = $dados->selecionarAlunos();
+            $dadosServidores = $dados->selecionarServidores();
+            $dadosTurmas = $dados->selecionarTurmas();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -73,6 +77,7 @@ class ReadController
             $variaveis['dadosAluno'] = $dadosAlunos;
             $variaveis['dadosServidor'] = $dadosServidores;
             $variaveis['dadosTurma'] = $dadosTurmas;
+            $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
 
             $conteudo = $template->render($variaveis);
 
@@ -86,7 +91,9 @@ class ReadController
         
         try {
 
-            $numRegistros = Read::numeroRegistros();
+            $numRegistros = new Read;
+
+            $numRegistros = $numRegistros->numeroRegistros();
 
             echo json_encode($numRegistros);
             
@@ -94,4 +101,26 @@ class ReadController
             echo $e->getMessage();
         }
     } 
+
+    public function respostaReserva(){
+        try {
+
+            $key = strlen('reserva');
+
+            SharedMemory::read($key);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function respostaRetirada(){
+        try {
+
+            $key = strlen('retirada');
+
+            SharedMemory::read($key);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
 }

@@ -3,7 +3,7 @@
 class Create
 {
 
-	public static function cadastrarAluno($dadosAluno)
+	public function cadastrarAluno($dadosAluno)
 	{
 		$con = Connection::getConn();
 
@@ -28,14 +28,17 @@ class Create
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
+			return 'criado';
 		}
+		return 'erro';
 	}
 
-	public static function cadastrarServidor($dadosServidor)
+	public function cadastrarServidor($dadosServidor)
 	{
 
 		$con = Connection::getConn();
+
+		$senha_hash = password_hash($dadosServidor['senha'], PASSWORD_DEFAULT);
 
 		$query = 'INSERT INTO servidores (
 			email, 
@@ -49,66 +52,98 @@ class Create
 
 		$stmt->bindParam('1', $dadosServidor['email']);
 		$stmt->bindParam('2', $dadosServidor['nome_servidor']);
-		$stmt->bindParam('3', $dadosServidor['senha']);
+		$stmt->bindParam('3', $senha_hash);
 
 		$stmt->execute();
 
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
+			return 'criado';
 		}
+		return 'erro';
 	}
 
-	public static function cadastrarTurma($dadosTurma)
+	public function cadastrarTurma($dadosTurma)
 	{
 
 		$con = Connection::getConn();
 
 		$checkbox = implode(',', $dadosTurma['diasLanche']);
 
+		$reserva_de = new DateTime($dadosTurma['reserva_de']);
+		$reserva_ate = new DateTime($dadosTurma['reserva_ate']);
+		$retirada_de = new DateTime($dadosTurma['retirada_de']);
+		$retirada_ate = new DateTime($dadosTurma['retirada_ate']);
+
+		// if ($reserva_ate > $reserva_de) {
+		// 	$reserva_de = new DateTime($dadosTurma['reserva_ate']);
+		// 	$reserva_ate = new DateTime($dadosTurma['reserva_de']);
+		// 	echo "Invertido!";
+		// }
+
+		// if ($retirada_ate > $retirada_de) {
+		// 	$retirada_de = new DateTime($dadosTurma['retirada_ate']);
+		// 	$retirada_ate = new DateTime($dadosTurma['retirada_de']);
+		// }
+
 		$query = 'INSERT INTO turmas (
 			curso, 
 			semestre, 
 			modalidade,
-			dias_lanche
+			dias_lanche,
+			reserva_de,
+			reserva_ate,
+			retirada_de,
+			retirada_ate
 		) VALUES (
-			?, ?, ?, ?
+			?, ?, ?, ?, ?, ?, ?, ?
 		)';
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $dadosTurma['curso']);
-		$stmt->bindParam('2', $dadosTurma['semestre']);
-		$stmt->bindParam('3', $dadosTurma['modalidade']);
-		$stmt->bindParam('4', $checkbox);
+		$stmt->bindValue('1', $dadosTurma['curso']);
+		$stmt->bindValue('2', $dadosTurma['semestre']);
+		$stmt->bindValue('3', $dadosTurma['modalidade']);
+		$stmt->bindValue('4', $checkbox);
+		$stmt->bindValue('5', $reserva_de->format('H:i:s'));
+		$stmt->bindValue('6', $reserva_ate->format('H:i:s'));
+		$stmt->bindValue('7', $retirada_de->format('H:i:s'));
+		$stmt->bindValue('8', $retirada_ate->format('H:i:s'));
+
 		$stmt->execute();
 
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
+			return 'criado';
 		}
+		return 'erro';
 	}
 
-	public function cadastrarRegistro($rfid)
+	public function reservarLancheRfid($rfid)
 	{
+
 		$con = Connection::getConn();
 
-		$dadosRegistro = $rfid;
-
-		$nome_dias = [
-			'%Domingo%', '%Segunda-Feira%',
-			'%Terça-Feira%', '%Quarta-Feira%', '%Quinta-Feira%',
-			'%Sexta-Feira%', '%Sábado%'
+		$dias_semana = [
+			'Domingo', 'Segunda-Feira',
+			'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira',
+			'Sexta-Feira', 'Sábado'
 		];
 
-		$entrada = new DateTime();
-		$dia = $entrada->format('w');
+		$data_atual = new DateTime();
+		$num_dia_semana = $data_atual->format('w');
 
 		$query = 'SELECT
-			turmas.horario_inicio,
-			turmas.horario_fim
+			alunos.matricula,
+			alunos.nome,
+			alunos.turma,
+			turmas.dias_lanche,
+			turmas.reserva_de,
+			turmas.reserva_ate,
+			turmas.retirada_de,
+			turmas.retirada_ate
 		FROM
 			alunos
 		INNER JOIN turmas ON(id_turma = turma)
@@ -117,32 +152,444 @@ class Create
 
 		$stmt = $con->prepare($query);
 
-		$stmt->bindParam('1', $dadosRegistro);
+		$stmt->bindParam('1', $rfid);
 
 		$stmt->execute();
 
-		$userReads = $stmt->fetch(PDO::FETCH_ASSOC);
+		$aluno = $stmt->fetch(PDO::FETCH_ASSOC);
 		$affectedRows = $stmt->rowCount();
 
 		//URL para testar:
-		//http://localhost/github/ppi-lanches/?pagina=create&metodo=registro&id=8a45as54sf8sdf1
-		if ($affectedRows > 0) {
-			
-			$inicio = new DateTime($userReads['horario_inicio']);
-			$fim = new DateTime($userReads['horario_fim']);
-			$inicioR = new DateTime('15:40:00');
-			$fimR = new DateTime('16:00:00');
-			// var_dump($userReads, $inicio, $fim, $entrada);
+		//http://localhost/github/ppi-lanches/?pagina=create&metodo=registroRfid&id=8a45as54sf8sdf1
 
-			if ($entrada > $inicio && $entrada < $fim) {
-				echo 'É possível cadastrar!';
-			} elseif ($entrada > $inicioR && $entrada < $fimR){
-				echo 'É possível retirar o lanche!';
+		//Se na contagem de linhas for maior que 0 (no caso retornará 1) então existe um usuário com aquele rfid
+		if ($affectedRows > 0) {
+
+			//Define objetos do tipo dateTime com os horários de reserva e retirada da turma do aluno
+			$reserva_de = new DateTime($aluno['reserva_de']);
+			$reserva_ate = new DateTime($aluno['reserva_ate']);
+			$retirada_de = new DateTime($aluno['retirada_de']);
+			$retirada_ate = new DateTime($aluno['retirada_ate']);
+
+			$query = 'SELECT 
+				timestamp_reserva, 
+				timestamp_retirada
+			FROM 
+				registros 
+			WHERE 
+				codigo_aluno = ? 
+			AND 
+				DATE(timestamp_reserva) = ?';
+
+			$stmt = $con->prepare($query);
+
+			$stmt->bindValue('1', $rfid);
+			$stmt->bindValue('2', $data_atual->format('Y-m-d'));
+
+			$stmt->execute();
+
+			$verificacaoRegistros = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			//Se estiver dentro do horário de inserção e do dia de ganhar lanche, e não há nenhum registro de lanche então cria uma reserva
+			if (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] == null && $verificacaoRegistros['timestamp_retirada'] == null)) {
+
+				//Insere um novo registro de reserva
+				$query = 'INSERT INTO registros(
+					codigo_aluno,
+					matricula_aluno,
+					turma_aluno,
+					timestamp_reserva
+				)
+				VALUES (?, ?, ?, ?)';
+
+				$stmt = $con->prepare($query);
+
+				$stmt->bindValue('1', $rfid);
+				$stmt->bindValue('2', $aluno['matricula']);
+				$stmt->bindValue('3', $aluno['turma']);
+				$stmt->bindValue('4', $data_atual->format('Y-m-d H:i:s'));
+
+				$stmt->execute();
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Pedido de lanche cadastrado!');
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] != null)) {
+				//Se estiver dentro do horário de inserção e do dia de ganha lanche, e já houver uma reserva no dia então imprime que já há um pedido de lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi requisitado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
+				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
 			} else {
-				echo "Horário inválido: {$entrada->format('H:i:s')}! Você deve solicitar o lanche entre {$inicio->format('H:i:s')} a {$fim->format('H:i:s')}.";
+				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
 			}
+
+			//Se não encontrar um registro com o rfid então quer dizer que não há um usuário cadastrado
 		} else {
-			echo 'Usuário não encontrado! Certifique-se de possuir um cadastro.';
+			$resultado = array('identificacao' => $rfid, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
 		}
+
+		$key = strlen('reserva');
+
+		SharedMemory::save($key, $resultado);
+	}
+
+	public function reservarLancheMatricula($matricula)
+	{
+		$con = Connection::getConn();
+
+		$dias_semana = [
+			'Domingo', 'Segunda-Feira',
+			'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira',
+			'Sexta-Feira', 'Sábado'
+		];
+
+		$data_atual = new DateTime();
+		$num_dia_semana = $data_atual->format('w');
+
+		$query = 'SELECT
+			alunos.nome,
+			alunos.codigo,
+			alunos.turma,
+			turmas.dias_lanche,
+			turmas.reserva_de,
+			turmas.reserva_ate,
+			turmas.retirada_de,
+			turmas.retirada_ate
+		FROM
+			alunos
+		INNER JOIN turmas ON(id_turma = turma)
+		WHERE
+			matricula = ?';
+
+		$stmt = $con->prepare($query);
+
+		$stmt->bindParam('1', $matricula);
+
+		$stmt->execute();
+
+		$aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+		$affectedRows = $stmt->rowCount();
+
+		//URL para testar:
+		//http://localhost/github/ppi-lanches/?pagina=create&metodo=registroMatricula&id=2017315143
+
+		//Se na contagem de linhas for maior que 0 (no caso retornará 1) então existe um usuário com aquela matricula
+		if ($affectedRows > 0) {
+
+			//Define objetos do tipo dateTime com os horários de reserva e retirada da turma do aluno
+			$reserva_de = new DateTime($aluno['reserva_de']);
+			$reserva_ate = new DateTime($aluno['reserva_ate']);
+			$retirada_de = new DateTime($aluno['retirada_de']);
+			$retirada_ate = new DateTime($aluno['retirada_ate']);
+
+			$query = 'SELECT 
+				timestamp_reserva, 
+				timestamp_retirada
+			FROM 
+				registros 
+			WHERE 
+				matricula_aluno = ? 
+			AND 
+				DATE(timestamp_reserva) = ?';
+
+			$stmt = $con->prepare($query);
+
+			$stmt->bindValue('1', $matricula);
+			$stmt->bindValue('2', $data_atual->format('Y-m-d'));
+
+			$stmt->execute();
+
+			$verificacaoRegistros = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			//Se estiver dentro do horário de inserção e do dia de ganhar lanche, e não há nenhum registro de lanche então cria uma reserva
+			if (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] == null && $verificacaoRegistros['timestamp_retirada'] == null)) {
+
+				//Insere um novo registro de reserva
+				$query = 'INSERT INTO registros(
+					codigo_aluno,
+					matricula_aluno,
+					turma_aluno,
+					timestamp_reserva
+				)
+				VALUES (?, ?, ?, ?)';
+
+				$stmt = $con->prepare($query);
+
+				$stmt->bindValue('1', $aluno['codigo']);
+				$stmt->bindValue('2', $matricula);
+				$stmt->bindValue('3', $aluno['turma']);
+				$stmt->bindValue('4', $data_atual->format('Y-m-d H:i:s'));
+
+				$stmt->execute();
+
+				echo json_encode(array('identificacao' => $aluno['nome'], 'mensagem' => 'Pedido de lanche cadastrado!'));
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] != null)) {
+				//Se estiver dentro do horário de inserção e do dia de ganha lanche, e já houver uma reserva no dia então imprime que já há um pedido de lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi requisitado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
+				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
+			} else {
+				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
+			}
+
+			//Se não encontrar um registro com a matricula então quer dizer que não há um usuário cadastrado
+		} else {
+			$resultado = array('identificacao' => $matricula, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
+		}
+
+		$key = strlen('reserva');
+
+		SharedMemory::save($key, $resultado);
+	}
+
+	public function retirarLancheRfid($rfid)
+	{
+
+		$con = Connection::getConn();
+
+		$dias_semana = [
+			'Domingo', 'Segunda-Feira',
+			'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira',
+			'Sexta-Feira', 'Sábado'
+		];
+
+		$data_atual = new DateTime();
+		$num_dia_semana = $data_atual->format('w');
+
+		$query = 'SELECT
+			alunos.matricula,
+			alunos.nome,
+			alunos.turma,
+			turmas.dias_lanche,
+			turmas.reserva_de,
+			turmas.reserva_ate,
+			turmas.retirada_de,
+			turmas.retirada_ate
+		FROM
+			alunos
+		INNER JOIN turmas ON(id_turma = turma)
+		WHERE
+			codigo = ?';
+
+		$stmt = $con->prepare($query);
+
+		$stmt->bindParam('1', $rfid);
+
+		$stmt->execute();
+
+		$aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+		$affectedRows = $stmt->rowCount();
+
+		//URL para testar:
+		//http://localhost/github/ppi-lanches/?pagina=create&metodo=registroRfid&id=8a45as54sf8sdf1
+
+		//Se na contagem de linhas for maior que 0 (no caso retornará 1) então existe um usuário com aquele rfid
+		if ($affectedRows > 0) {
+
+			//Define objetos do tipo dateTime com os horários de reserva e retirada da turma do aluno
+			$reserva_de = new DateTime($aluno['reserva_de']);
+			$reserva_ate = new DateTime($aluno['reserva_ate']);
+			$retirada_de = new DateTime($aluno['retirada_de']);
+			$retirada_ate = new DateTime($aluno['retirada_ate']);
+
+			$query = 'SELECT 
+				timestamp_reserva, 
+				timestamp_retirada
+			FROM 
+				registros 
+			WHERE 
+				codigo_aluno = ? 
+			AND 
+				DATE(timestamp_reserva) = ?';
+
+			$stmt = $con->prepare($query);
+
+			$stmt->bindValue('1', $rfid);
+			$stmt->bindValue('2', $data_atual->format('Y-m-d'));
+
+			$stmt->execute();
+
+			$verificacaoRegistros = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			//Se estiver dentro do horário de retirada e do dia de ganha lanche, e houver uma reserva do dia então atualiza-se o registro com a retirada
+			if (($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] == null)) {
+
+				//Atualiza o registro de reserva inserindo o horário de retirada de acordo com o rfid e o dia
+				$query = 'UPDATE registros
+				SET
+					timestamp_retirada = ?
+				WHERE
+					codigo_aluno = ? 
+				AND
+					DATE(timestamp_reserva) = ?';
+
+				$stmt = $con->prepare($query);
+
+				$stmt->bindValue('1', $data_atual->format('Y-m-d H:i:s'));
+				$stmt->bindValue('2', $rfid);
+				$stmt->bindValue('3', $data_atual->format('Y-m-d'));
+
+				$stmt->execute();
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Lanche retirado!');
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] == null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e não houver nenhum registro de reserva do dia então imprime que não se pode retirar o lanche sem pedir
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "Não é possível retirar sem pedir o lanche!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
+				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
+			} else {
+				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
+			}
+
+			//Se não encontrar um registro com o rfid então quer dizer que não há um usuário cadastrado
+		} else {
+			$resultado = array('identificacao' => $rfid, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
+		}
+
+		$key = strlen('retirada');
+
+		SharedMemory::save($key, $resultado);
+	}
+
+	public function retirarLancheMatricula($matricula)
+	{
+		$con = Connection::getConn();
+
+		$dias_semana = [
+			'Domingo', 'Segunda-Feira',
+			'Terça-Feira', 'Quarta-Feira', 'Quinta-Feira',
+			'Sexta-Feira', 'Sábado'
+		];
+
+		$data_atual = new DateTime();
+		$num_dia_semana = $data_atual->format('w');
+
+		$query = 'SELECT
+			alunos.nome,
+			alunos.codigo,
+			alunos.turma,
+			turmas.dias_lanche,
+			turmas.reserva_de,
+			turmas.reserva_ate,
+			turmas.retirada_de,
+			turmas.retirada_ate
+		FROM
+			alunos
+		INNER JOIN turmas ON(id_turma = turma)
+		WHERE
+			matricula = ?';
+
+		$stmt = $con->prepare($query);
+
+		$stmt->bindParam('1', $matricula);
+
+		$stmt->execute();
+
+		$aluno = $stmt->fetch(PDO::FETCH_ASSOC);
+		$affectedRows = $stmt->rowCount();
+
+		//URL para testar:
+		//http://localhost/github/ppi-lanches/?pagina=create&metodo=registroMatricula&id=2017315143
+
+		//Se na contagem de linhas for maior que 0 (no caso retornará 1) então existe um usuário com aquela matricula
+		if ($affectedRows > 0) {
+
+			//Define objetos do tipo dateTime com os horários de reserva e retirada da turma do aluno
+			$reserva_de = new DateTime($aluno['reserva_de']);
+			$reserva_ate = new DateTime($aluno['reserva_ate']);
+			$retirada_de = new DateTime($aluno['retirada_de']);
+			$retirada_ate = new DateTime($aluno['retirada_ate']);
+
+			$query = 'SELECT 
+				timestamp_reserva, 
+				timestamp_retirada
+			FROM 
+				registros 
+			WHERE 
+				matricula_aluno = ? 
+			AND 
+				DATE(timestamp_reserva) = ?';
+
+			$stmt = $con->prepare($query);
+
+			$stmt->bindValue('1', $matricula);
+			$stmt->bindValue('2', $data_atual->format('Y-m-d'));
+
+			$stmt->execute();
+
+			$verificacaoRegistros = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			//Se estiver dentro do horário de retirada e do dia de ganha lanche, e houver uma reserva do dia então atualiza-se o registro com a retirada
+			if (($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] == null)) {
+
+				//Atualiza o registro de reserva inserindo o horário de retirada de acordo com o rfid e o dia
+				$query = 'UPDATE registros
+				SET
+					timestamp_retirada = ?
+				WHERE
+					matricula_aluno = ? 
+				AND
+					DATE(timestamp_reserva) = ?';
+
+				$stmt = $con->prepare($query);
+
+				$stmt->bindValue('1', $data_atual->format('Y-m-d H:i:s'));
+				$stmt->bindValue('2', $matricula);
+				$stmt->bindValue('3', $data_atual->format('Y-m-d'));
+
+				$stmt->execute();
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Lanche retirado!');
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] == null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e não houver nenhum registro de reserva do dia então imprime que não se pode retirar o lanche sem pedir
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "Não é possível retirar sem pedir o lanche!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
+				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
+				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
+			} else {
+				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
+
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
+			}
+
+			//Se não encontrar um registro com a matricula então quer dizer que não há um usuário cadastrado
+		} else {
+			$resultado = array('identificacao' => $matricula, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
+		}
+
+		$key = strlen('retirada');
+
+		SharedMemory::save($key, $resultado);
 	}
 }

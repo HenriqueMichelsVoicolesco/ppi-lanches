@@ -39,23 +39,24 @@ if ($entrada > $inicio && $entrada < $fim) {
 // 	echo 'Limite excedido!';
 // } else {
 	
-// 	$query = ('
-// 		INSERT INTO registros(
-// 			codigo_aluno,
-// 			matricula_aluno,
-// 			turma_aluno
-// 		)
-// 		SELECT
-// 			alunos.codigo,
-// 			alunos.matricula,
-// 			alunos.turma
-// 		FROM
-// 			alunos
-// 		INNER JOIN turmas ON
-// 			(turma = id_turma)
-// 		WHERE
-// 			alunos.codigo = ? AND turmas.horarios LIKE ?
-// 		');
+	// $query = ('
+		// INSERT INTO registros(
+		// 	codigo_aluno,
+		// 	matricula_aluno,
+		// 	turma_aluno,
+		// 	timestamp_reservas
+		// )
+		// SELECT
+		// 	alunos.codigo,
+		// 	alunos.matricula,
+		// 	alunos.turma
+		// FROM
+		// 	alunos
+		// INNER JOIN turmas ON
+		// 	(turma = id_turma)
+		// WHERE
+		// 	alunos.codigo = ? AND turmas.horarios LIKE ?
+	// 	');
 
 // 	$stmt = $con->prepare($query);
 // 	$stmt->bindParam('1', $rfid);

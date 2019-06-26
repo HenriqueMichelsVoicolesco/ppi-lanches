@@ -9,7 +9,8 @@ class CreateController
 
             Session::verificaLogin();
 
-            $dados = Read::selecionarTurmas();
+            $dados = new Read;
+            $dados = $dados->selecionarTurmas();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -18,6 +19,7 @@ class CreateController
 
             $variaveis = [];
             $variaveis['dados'] = $dados;
+            $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
 
             $conteudo = $template->render($variaveis);
 
@@ -34,13 +36,11 @@ class CreateController
 
             Session::verificaLogin();
 
-            $status = Create::cadastrarAluno($_POST);
+            $status = new Create;
+            $status = $status->cadastrarAluno($_POST);
 
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            header("Location: ?pagina=create&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -53,13 +53,11 @@ class CreateController
 
             Session::verificaLogin();
 
-            $status = Create::cadastrarServidor($_POST);
+            $status = new Create;
+            $status = $status->cadastrarServidor($_POST);
 
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            header("Location: ?pagina=create&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -72,33 +70,62 @@ class CreateController
 
             Session::verificaLogin();
 
-            $status = Create::cadastrarTurma($_POST);
+            $status = new Create;
+            $status = $status->cadastrarTurma($_POST);
 
-            if ($status) {
-                header('Location: ?pagina=admin&operacao=criado');
-            } else {
-                header('Location: ?pagina=admin&operacao=erro');
-            }
+            header("Location: ?pagina=create&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
-    
-    public function registro($params)
+
+    public function reservaRfid($params)
+    {
+        
+        try {
+
+            $registro = new Create;
+
+            $registro->reservarLancheRfid($params);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function reservaMatricula($params)
     {
 
         try {
 
             $registro = new Create;
 
-            $registro->cadastrarRegistro($params);
-            // Create::cadastrarRegistro($params);
+            $registro->reservarLancheMatricula($params);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function retiradaRfid($params)
+    {
+        
+        try {
 
-            // if ($status) {
-            //     header('Location: ?pagina=admin&operacao=criado');
-            // } else {
-            //     header('Location: ?pagina=admin&operacao=erro');
-            // }
+            $registro = new Create;
+
+            $registro->retirarLancheRfid($params);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function retiradaMatricula($params)
+    {
+
+        try {
+
+            $registro = new Create;
+
+            $registro->retirarLancheMatricula($params);
         } catch (Exception $e) {
             echo $e->getMessage();
         }

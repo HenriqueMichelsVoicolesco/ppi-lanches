@@ -31,13 +31,14 @@
                 <th scope="col">Matrícula</th>
                 <th scope="col">Nome</th>
                 <th scope="col">Curso</th>
-                <th scope="col">Timestamp</th>
+                <th scope="col">Horário de reserva</th>
+                <th scope="col">Horário de retirada</th>
               </tr>
             </thead>
             <tbody>
               {% if dados == false %}
               <tr>
-                <th scope="row" colspan="6" style="text-align: center;">Não foi encontrado nenhum registro!</th>
+                <th scope="row" colspan="7" style="text-align: center;">Não foi encontrado nenhum registro referente ao dia de hoje!</th>
               </tr>
               {% else %}
               {% for registros in dados %}
@@ -47,11 +48,11 @@
                 <td>{{registros.matricula_aluno}}</td>
                 <td>{{registros.nome}}</td>
                 <td>{{registros.curso}}</td>
-                <td>{{registros.timestamp_registro}}</td>
+                <td>{{registros.timestamp_reserva}}</td>
+                <td>{{registros.timestamp_retirada}}</td>
               </tr>
               {% endfor %}
               {% endif %}
-
             </tbody>
           </table>
         </div>

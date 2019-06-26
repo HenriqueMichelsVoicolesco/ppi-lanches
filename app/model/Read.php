@@ -3,34 +3,39 @@
 class Read
 {
 
-	public static function numeroRegistros()
+	public function numeroRegistros()
 	{ 
 		$con = Connection::getConn();
 
+		$data_atual = new DateTime();
+
 		$query = 'SELECT 
-			COUNT(DISTINCT matricula_aluno)
+			COUNT(matricula_aluno)
 		AS
 			num_registros
 		FROM
-			registros;';
+			registros
+		WHERE
+			DATE(timestamp_reserva) = ?;';
 
 		$stmt = $con->prepare($query);
+		$stmt->bindValue('1', $data_atual->format('Y-m-d'));
 
 		$stmt->execute();
 
 		$resultado = [];
 
-		while ($row = $stmt->fetchObject('Read')) {
-			$resultado[] = $row;
-		}
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		return $resultado;
+		return $row;
 	}
 
-	public static function selecionarRegistros()
+	public function selecionarRegistros()
 	{
 
 		$con = Connection::getConn();
+
+		$data_atual = new DateTime();
 
 		$query = 'SELECT
 			registros.id_registro,
@@ -38,13 +43,18 @@ class Read
 			registros.matricula_aluno,
 			alunos.nome,
 			turmas.curso,
-			registros.timestamp_registro
+			registros.timestamp_reserva,
+			registros.timestamp_retirada
 		FROM
 			registros
 		INNER JOIN alunos ON(matricula_aluno = matricula)
-		INNER JOIN turmas ON(turma_aluno = id_turma);';
+		INNER JOIN turmas ON(turma_aluno = id_turma)
+		WHERE
+			DATE(timestamp_reserva) = ?;';
 
 		$stmt = $con->prepare($query);
+
+		$stmt->bindValue('1', $data_atual->format('Y-m-d'));
 
 		$stmt->execute();
 
@@ -57,14 +67,16 @@ class Read
 		return $resultado;
 	}
 
-	public static function selecionarTurmas()
+	public function selecionarTurmas()
 	{
 
 		$con = Connection::getConn();
 
 		$query = 'SELECT *
 		FROM
-			turmas;';
+			turmas
+		ORDER BY
+    		curso ASC;';
 
 		$stmt = $con->prepare($query);
 
@@ -79,7 +91,7 @@ class Read
 		return $resultado;
 	}
 
-	public static function selecionarAlunos()
+	public function selecionarAlunos()
 	{
 
 		$con = Connection::getConn();
@@ -92,7 +104,9 @@ class Read
 			turmas.curso
 		FROM
 			alunos
-		INNER JOIN turmas ON(turma = id_turma)';
+		INNER JOIN turmas ON(turma = id_turma)
+		ORDER BY
+    		nome ASC;';
 
 		$stmt = $con->prepare($query);
 
@@ -107,14 +121,16 @@ class Read
 		return $resultado;
 	}
 
-	public static function selecionarServidores()
+	public function selecionarServidores()
 	{
 
 		$con = Connection::getConn();
 
 		$query = 'SELECT *
 		FROM
-			servidores;';
+			servidores
+		ORDER BY
+    		nome ASC;';
 
 		$stmt = $con->prepare($query);
 
@@ -153,7 +169,7 @@ class Read
 		return $resultado;
 	}
 
-	public static function selecionarAlunoPorId($params)
+	public function selecionarAlunoPorId($params)
 	{
 
 		$con = Connection::getConn();
@@ -177,7 +193,7 @@ class Read
 		return $resultado;
 	}
 
-	public static function selecionarServidorPorId($params)
+	public function selecionarServidorPorId($params)
 	{
 
 		$con = Connection::getConn();
@@ -200,9 +216,5 @@ class Read
 
 		return $resultado;
 	}
-
-	// public static function selecionarHorariosTurma($params){
-
-	// }
 
 }

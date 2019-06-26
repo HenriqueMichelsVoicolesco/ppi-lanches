@@ -4,6 +4,21 @@
       <b> IFFar</b>
     </a> </div>
 </nav>
+{% if operacao == 'deletado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro deletado com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'erro' %}
+<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+  Erro ao executar operação!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
 <div class="py-5 text-center">
   <div class="container">
     <div class="row">
@@ -24,106 +39,113 @@
       <div class="col-md-12">
         <div class="accordion" id="accordionExample">
 
-          <div class="card mb-3">
-            <div class="card-header" id="headingOne">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne"
-                  aria-expanded="false" aria-controls="collapseOne"> Servidores</button></h5>
-            </div>
-            <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-striped table-borderless">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col" class="text-center">Opções</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+          <div id="accordion">
+            <div class="card mb-3">
+              <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne"
+                    aria-expanded="false" aria-controls="collapseOne"> Servidores</button></h5>
+              </div>
+              <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+                          <th scope="col">ID</th>
+                          <th scope="col">Email</th>
+                          <th scope="col">Nome</th>
+                          <th scope="col" class="text-center">Opções</th>
+                        </tr>
+                      </thead>
+                      <tbody>
 
-                      {% for servidor in dadosServidor %}
-                      <tr>
-                        <td>{{servidor.id_servidor}}</td>
-                        <td>{{servidor.email}}</td>
-                        <td>{{servidor.nome}}</td>
-                        <td>
-                          <div class="d-flex justify-content-center">
-                            <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
-                                href="?pagina=update&metodo=formServidor&id={{servidor.id_servidor}}">Editar</a></div>
-                            <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
-                                href="?pagina=delete&metodo=servidor&id={{servidor.id_servidor}}" onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
-                          </div>
-                        </td>
-                      </tr>
-                      {% endfor %}
+                        {% for servidor in dadosServidor %}
+                        <tr>
+                          <td>{{servidor.id_servidor}}</td>
+                          <td>{{servidor.email}}</td>
+                          <td>{{servidor.nome}}</td>
+                          <td>
+                            <div class="d-flex justify-content-center">
+                              <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
+                                  href="?pagina=update&metodo=formServidor&id={{servidor.id_servidor}}">Editar</a></div>
+                              <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
+                                  href="?pagina=delete&metodo=servidor&id={{servidor.id_servidor}}"
+                                  onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
 
-                    </tbody>
-                  </table>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
           {% for turma in dadosTurma %}
-          <div class="card mb-3">
-            <div class="card-header" id="heading{{turma.id_turma}}">
-              <h5 class="mb-0">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
-                  data-target="#collapse{{turma.id_turma}}" aria-expanded="false"
-                  aria-controls="collapse{{turma.id_turma}}"> {{turma.curso}} - {{turma.modalidade}} - {{turma.semestre}}</button>
-              </h5>
-            </div>
-            <div id="collapse{{turma.id_turma}}" class="collapse" aria-labelledby="heading{{turma.id_turma}}"
-              data-parent="#accordionExample">
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-striped table-borderless">
-                    <thead>
+          <div id="accordion">
+            <div class="card mb-3">
+              <div class="card-header" id="heading{{turma.id_turma}}">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                    data-target="#collapse{{turma.id_turma}}" aria-expanded="false"
+                    aria-controls="collapse{{turma.id_turma}}"> {{turma.curso}} - {{turma.modalidade}} -
+                    {{turma.semestre}}</button>
+                </h5>
+              </div>
+              <div id="collapse{{turma.id_turma}}" class="collapse" aria-labelledby="heading{{turma.id_turma}}"
+                data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
 
-                      <tr>
-                        <th scope="col" contenteditable="true">Matrícula</th>
-                        <th scope="col">Código RFID</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Curso</th>
-                        <th scope="col" class="text-center">Opções</th>
-                      </tr>
-                    </thead>
-                    <tbody>
+                        <tr>
+                          <th scope="col" contenteditable="true">Matrícula</th>
+                          <th scope="col">Código RFID</th>
+                          <th scope="col">Nome</th>
+                          <th scope="col">Curso</th>
+                          <th scope="col" class="text-center">Opções</th>
+                        </tr>
+                      </thead>
+                      <tbody>
 
-                      {% set temPosts = false %}
+                        {% set temPosts = false %}
 
-                      {% for aluno in dadosAluno %}
-                      {% if turma.id_turma == aluno.turma %}
-                      <tr>
-                        <td>{{aluno.matricula}}</td>
-                        <td>{{aluno.codigo}}</td>
-                        <td>{{aluno.nome}}</td>
-                        <td>{{aluno.curso}}</td>
-                        <td>
-                          <div class="d-flex justify-content-center">
-                            <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
-                                href="?pagina=update&metodo=formAluno&id={{aluno.matricula}}">Editar</a></div>
-                            <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
-                                href="?pagina=delete&metodo=aluno&id={{aluno.matricula}}" onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
-                          </div>
-                        </td>
-                      </tr>
-                      {% set temPosts = true %}
-                      
-                      {% endif %}
-                      {% endfor %}
+                        {% for aluno in dadosAluno %}
+                        {% if turma.id_turma == aluno.turma %}
+                        <tr>
+                          <td>{{aluno.matricula}}</td>
+                          <td>{{aluno.codigo}}</td>
+                          <td>{{aluno.nome}}</td>
+                          <td>{{aluno.curso}}</td>
+                          <td>
+                            <div class="d-flex justify-content-center">
+                              <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-warning"
+                                  href="?pagina=update&metodo=formAluno&id={{aluno.matricula}}">Editar</a></div>
+                              <div class="d-flex justify-content-center col-lg-6 col-md-5"><a class="btn btn-danger"
+                                  href="?pagina=delete&metodo=aluno&id={{aluno.matricula}}"
+                                  onclick="return confirm('Ao prosseguir o registro será deletado.')">Excluir</a></div>
+                            </div>
+                          </td>
+                        </tr>
+                        {% set temPosts = true %}
 
-                      {% if temPosts == false %}
-                      <tr>
-                        <th scope="row" colspan="6" class="text-center">Não há nenhuma turma cadastrada!</th>
-                      </tr>
-                      {% endif %}
+                        {% endif %}
+                        {% endfor %}
 
-                    </tbody>
-                  </table>
+                        {% if temPosts == false %}
+                        <tr>
+                          <th scope="row" colspan="6" class="text-center">Não há nenhum aluno cadastrado na turma!</th>
+                        </tr>
+                        {% endif %}
+
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>

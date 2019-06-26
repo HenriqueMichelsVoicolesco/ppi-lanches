@@ -3,7 +3,7 @@
 class Delete
 {
 
-	public static function deletarAluno($matricula)
+	public function deletarAluno($matricula)
 	{
 
 		$con = Connection::getConn();
@@ -24,11 +24,12 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
-		} 
+			return 'deletado';
+		}
+		return 'erro';
 	}
 
-	public static function deletarServidor($id)
+	public function deletarServidor($id)
 	{
 
 		$con = Connection::getConn();
@@ -49,11 +50,12 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
-		} 
+			return 'deletado';
+		}
+		return 'erro';
 	}
 
-	public static function deletarTurma($id)
+	public function deletarTurma($id)
 	{
 
 		$con = Connection::getConn();
@@ -74,7 +76,8 @@ class Delete
 		$affectedRows = $stmt->rowCount();
 
 		if ($affectedRows > 0) {
-			return true;
-		} 
+			return 'deletado';
+		}
+		return 'erro';
 	}
 }

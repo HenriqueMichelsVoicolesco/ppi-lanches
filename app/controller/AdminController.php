@@ -15,11 +15,9 @@ class AdminController
 
             if (isset($_SESSION['nome'])) {
                 $template = $twig->load('admin.html');
-
-                $variaveis['dados'] = unserialize($_SESSION['nome']);
-                $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
+                $variaveis['nome'] = unserialize($_SESSION['nome']);
             } else {
-                $template = $twig->load('home.html');
+                $template = $twig->load('login.html');
 
                 $variaveis['dados'] = 'erro';
             }
@@ -32,29 +30,12 @@ class AdminController
         }
     }
 
-    public function login()
-    {
-
-        try {
-            $status = Login::logar($_POST);
-
-            if ($status) {
-                header('Location: ?pagina=admin');
-                exit;
-            } else {
-                self::index();
-            }
-            
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
     public function logout()
     {
         session_unset();
         session_destroy();
 
         header('Location: ?pagina=home');
+        exit;
     }
 }

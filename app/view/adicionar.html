@@ -1,98 +1,195 @@
-  <nav class="navbar navbar-dark bg-dark sticky-top">
-    <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="?pagina=admin">
-        <i class="fa d-inline fa-lg fa-circle-o"></i>
-        <b> IFFar</b>
-      </a> </div>
-  </nav>
-  <div class="py-5 text-center">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="text-light">Cadastrar<br></h1>
-        </div>
+<nav class="navbar navbar-dark bg-dark sticky-top">
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="?pagina=admin">
+      <i class="fa d-inline fa-lg fa-circle-o"></i>
+      <b> IFFar</b>
+    </a> </div>
+</nav>
+{% if operacao == 'criado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro inserido com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'erro' %}
+<div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+  Erro ao executar operação!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+<div class="py-5 text-center">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-light">Cadastrar<br></h1>
       </div>
     </div>
   </div>
-  <div class="bg-light py-3 h-100">
-    <div class="container">
-      <div class="row d-flex justify-content-center">
-        <div class="p-4 text-center col-md-7">
-          <h4><b>Adicione novos alunos ou servidores ao sistema</b></h4>
-          <div class="form-group d-flex justify-content-center pt-3">
+</div>
+<div class="bg-light py-3 h-100">
+  <div class="container">
+    <div class="row d-flex justify-content-center">
+      <div class="p-4 text-center col-md-7">
+        <h4><b>Adicione novos alunos ou servidores ao sistema</b></h4>
+        <div class="form-group d-flex justify-content-center pt-3">
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="alunos-check" name="form-check" class="custom-control-input" value="alunos"
+              {% if (dadosTurma == false or dadosServidor == false) and dadosAluno == true %} checked
+              {% elseif (dadosTurma == true or dadosServidor == true) and dadosAluno == false %} disabled
+              {% endif %}><label class="custom-control-label" for="alunos-check">Alunos</label>
+          </div>
+          <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="servidores-check" name="form-check" class="custom-control-input" value="servidores"
+              {% if (dadosTurma == false or dadosAluno == false) and dadosServidor == true %} checked
+              {% elseif (dadosTurma == true or dadosAluno == true) and dadosServidor == false %} disabled
+              {% endif %}><label class="custom-control-label" for="servidores-check">Servidores</label>
+          </div>
+          <div class="form-group">
             <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="alunos-check" name="form-check" class="custom-control-input" value="alunos" {% if (dadosTurma == false or dadosServidor == false) and dadosAluno == true %} checked {% elseif (dadosTurma == true or dadosServidor == true) and dadosAluno == false %} disabled {% endif %}><label class="custom-control-label" for="alunos-check">Alunos</label>
-            </div>
-            <div class="custom-control custom-radio custom-control-inline">
-              <input type="radio" id="servidores-check" name="form-check" class="custom-control-input" value="servidores" {% if (dadosTurma == false or dadosAluno == false) and dadosServidor == true %} checked {% elseif (dadosTurma == true or dadosAluno == true) and dadosServidor == false %} disabled {% endif %}><label class="custom-control-label" for="servidores-check">Servidores</label>
-            </div>
-            <div class="form-group">
-              <div class="custom-control custom-radio custom-control-inline">
-                <input type="radio" id="turmas-check" name="form-check" class="custom-control-input" value="turmas" {% if (dadosServidor == false or dadosAluno == false) and dadosTurma == true %} checked {% elseif (dadosServidor == true or dadosAluno == true) and dadosTurma == false %} disabled {% endif %}><label class="custom-control-label" for="turmas-check">Turmas</label>
-              </div>
+              <input type="radio" id="turmas-check" name="form-check" class="custom-control-input" value="turmas"
+                {% if (dadosServidor == false or dadosAluno == false) and dadosTurma == true %} checked
+                {% elseif (dadosServidor == true or dadosAluno == true) and dadosTurma == false %} disabled
+                {% endif %}><label class="custom-control-label" for="turmas-check">Turmas</label>
             </div>
           </div>
         </div>
       </div>
-      <div class="row justify-content-center d-flex">
-        <div class="col-md-7">
-          <form action="{% if dadosAluno == true %} ?pagina=update&metodo=salvarEdicaoAluno {% else %} ?pagina=create&metodo=aluno {% endif %}" method="POST" id="alunos" style="display: none">
-            {% if dadosAluno == true %} <input type="hidden" name="id_servidor" value="{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}"> {% endif %}
-            <div class="form-group"> <label for="matricula">Matrícula</label> <input type="number" class="form-control" placeholder="Insira a matrícula" required="required" name="matricula" id="matricula" minlength="10" maxlength="10" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="nome_aluno">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do aluno" required="required" name="nome_aluno" id="nome_aluno" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.nome}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="rfid">RFID</label> <input type="text" class="form-control" placeholder="Insira o código do usuário" id="rfid" name="rfid" required="required" value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.codigo}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="turma">Turma</label> <select class="form-control custom-select" required="required" id="turma" name="turma">
-                <option selected="" disabled="" value="Insira a turma do aluno">Insira a turma do aluno</option>
-                {% for turma in dados %}
-                <option value="{{turma.id_turma}}" {% for dadosA in dadosAluno %}{% if turma.id_turma == dadosA.turma %} selected {% endif %}{% endfor %}>{{turma.curso}} - {{turma.modalidade}} - {{turma.semestre}}</option>
-                {% endfor %}
-              </select> </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-          <form action="{% if dadosServidor == true %} ?pagina=update&metodo=salvarEdicaoServidor {% else %} ?pagina=create&metodo=servidor {% endif %}" method="POST" id="servidores" style="display: none">
-            {% if dadosServidor == true %} <input type="hidden" name="id_servidor" value="{% for dadosS in dadosServidor %}{{dadosS.id_servidor}}{% endfor %}"> {% endif %}
-            <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control" placeholder="Insira o email" required="required" name="email" id="email" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.email}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="nome_servidor">Nome</label> <input type="text" class="form-control" placeholder="Insira o nome do servidor" required="required" name="nome_servidor" id="nome_servidor" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.nome}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control" placeholder="Insira uma senha" id="senha" name="senha" required="required" maxlength="20" minlength="8" value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.senha}}{% endfor %}{% endif %}"> </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-          <form action="{% if dadosTurma == true %} ?pagina=update&metodo=salvarEdicaoTurma {% else %} ?pagina=create&metodo=turma {% endif %}" method="POST" id="turmas" style="display: none">
-            {% if dadosTurma == true %} <input type="hidden" name="id_turma" value="{% for dadosT in dadosTurma %}{{dadosT.id_turma}}{% endfor %}"> {% endif %}
-            <div class="form-group"> <label for="curso">Curso</label> <input type="text" class="form-control" placeholder="Insira o nome do curso" required="required" name="curso" id="curso" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.curso}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="semestre">Semestre</label> <input type="text" class="form-control" placeholder="Insira o semestre" required="required" name="semestre" id="semestre" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.semestre}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="modalidade">Modalidade</label> <input type="text" class="form-control" placeholder="Insira a modalidade" id="modalidade" name="modalidade" required="required" value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.modalidade}}{% endfor %}{% endif %}"> </div>
-            <div class="form-group"> <label for="segunda">Dias do lanche</label>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="segunda" name="diasLanche[]" value="Segunda-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Segunda-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
-                <label class="custom-control-label" for="segunda">Segunda-Feira</label>
+    </div>
+    <div class="row justify-content-center d-flex">
+      <div class="col-md-7">
+        <form class="needs-validation" novalidate
+          action="{% if dadosAluno == true %} ?pagina=update&metodo=salvarEdicaoAluno {% else %} ?pagina=create&metodo=aluno {% endif %}"
+          method="POST" id="alunos" style="display: none">
+          {% if dadosAluno == true %} <input type="hidden" name="id_aluno"
+            value="{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}"> {% endif %}
+          <div class="form-group"> <label for="matricula">Matrícula</label> <input type="number" class="form-control"
+              placeholder="Insira a matrícula" required name="matricula" id="matricula" minlength="10" maxlength="10"
+              value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="nome_aluno">Nome</label> <input type="text" class="form-control"
+              placeholder="Insira o nome" required name="nome_aluno" id="nome_aluno"
+              value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.nome}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="rfid">RFID</label> <input type="text" class="form-control"
+              placeholder="Insira o código" id="rfid" name="rfid"
+              value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.codigo}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="turma">Turma</label> <select class="form-control custom-select" required
+              id="turma" name="turma">
+              <option selected disabled value="">Insira a turma do aluno</option>
+              {% for turma in dados %}
+              <option value="{{turma.id_turma}}" {% for dadosA in dadosAluno %}{% if turma.id_turma == dadosA.turma %}
+                selected {% endif %}{% endfor %}>{{turma.curso}} - {{turma.modalidade}} - {{turma.semestre}}</option>
+              {% endfor %}
+            </select> </div>
+          <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+        <form class="needs-validation" novalidate
+          action="{% if dadosServidor == true %} ?pagina=update&metodo=salvarEdicaoServidor {% else %} ?pagina=create&metodo=servidor {% endif %}"
+          method="POST" id="servidores" style="display: none">
+          {% if dadosServidor == true %} <input type="hidden" name="id_servidor"
+            value="{% for dadosS in dadosServidor %}{{dadosS.id_servidor}}{% endfor %}"> {% endif %}
+          <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control"
+              placeholder="Insira o email" required name="email" id="email"
+              value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.email}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="nome_servidor">Nome</label> <input type="text" class="form-control"
+              placeholder="Insira o nome do servidor" required name="nome_servidor" id="nome_servidor"
+              value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.nome}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control"
+              placeholder="Insira uma senha" id="senha" name="senha" required maxlength="20" minlength="8" value="">
+          </div>
+          <button type="submit" class="btn btn-success">Enviar</button>
+        </form>
+        <form class="needs-validation" novalidate
+          action="{% if dadosTurma == true %} ?pagina=update&metodo=salvarEdicaoTurma {% else %} ?pagina=create&metodo=turma {% endif %}"
+          method="POST" id="turmas" style="display: none">
+          {% if dadosTurma == true %} <input type="hidden" name="id_turma"
+            value="{% for dadosT in dadosTurma %}{{dadosT.id_turma}}{% endfor %}"> {% endif %}
+          <div class="form-group"> <label for="curso">Curso</label> <input type="text" class="form-control"
+              placeholder="Insira o nome do curso" required name="curso" id="curso"
+              value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.curso}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="semestre">Semestre</label> <input type="text" class="form-control"
+              placeholder="Insira o semestre" required name="semestre" id="semestre"
+              value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.semestre}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="modalidade">Modalidade</label> <input type="text" class="form-control"
+              placeholder="Insira a modalidade" id="modalidade" name="modalidade" required
+              value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.modalidade}}{% endfor %}{% endif %}">
+          </div>
+          <div class="form-group"> <label for="modalidade">Reserva</label>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5 col-5"><input type="time" class="form-control"
+                  placeholder="Insira o horário do início das reservas dos lanches" id="reserva_de" name="reserva_de"
+                  required
+                  value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.reserva_de}}{% endfor %}{% endif %}">
               </div>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="terca" name="diasLanche[]" value="Terça-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Terça-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
-                <label class="custom-control-label" for="terca">Terça-Feira</label>
-              </div>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="quarta" name="diasLanche[]" value="Quarta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quarta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
-                <label class="custom-control-label" for="quarta">Quarta-Feira</label>
-              </div>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="quinta" name="diasLanche[]" value="Quinta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quinta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
-                <label class="custom-control-label" for="quinta">Quinta-Feira</label>
-              </div>
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="sexta" name="diasLanche[]" value="Sexta-Feira" {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Sexta-Feira' in dadosT.dias_lanche %} checked {% endif %}{% endfor %}{% endif %}>
-                <label class="custom-control-label" for="sexta">Sexta-Feira</label>
+              <div class="col-md-2 d-flex align-items-center justify-content-center col-2">-</div>
+              <div class="col-md-5 col-5"><input type="time" class="form-control"
+                  placeholder="Insira o horário do início das reservas dos lanches" id="reserva_ate" name="reserva_ate"
+                  required
+                  value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.reserva_ate}}{% endfor %}{% endif %}">
               </div>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </form>
-        </div>
+          </div>
+          <div class="form-group"> <label for="modalidade">Retirada</label>
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-5 col-5"><input type="time" class="form-control"
+                  placeholder="Insira o horário do início das retiradas dos lanches" id="retirada_de" name="retirada_de"
+                  required
+                  value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.retirada_de}}{% endfor %}{% endif %}">
+              </div>
+              <div class="col-md-2 d-flex align-items-center justify-content-center col-2">-</div>
+              <div class="col-md-5 col-5"><input type="time" class="form-control"
+                  placeholder="Insira o horário do término das retiradas dos lanches" id="retirada_ate"
+                  name="retirada_ate" required
+                  value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.retirada_ate}}{% endfor %}{% endif %}">
+              </div>
+            </div>
+          </div>
+          <div class="form-group"> <label for="segunda">Dias do lanche</label>
+            <div class="custom-control custom-checkbox" id="group-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="segunda" name="diasLanche[]"
+                value="Segunda-Feira" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Segunda-Feira' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="segunda">Segunda-Feira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="terca" name="diasLanche[]"
+                value="Terça-Feira" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Terça-Feira' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="terca">Terça-Feira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="quarta" name="diasLanche[]"
+                value="Quarta-Feira" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quarta-Feira' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="quarta">Quarta-Feira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="quinta" name="diasLanche[]"
+                value="Quinta-Feira" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Quinta-Feira' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="quinta">Quinta-Feira</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="sexta" name="diasLanche[]"
+                value="Sexta-Feira" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Sexta-Feira' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="sexta">Sexta-Feira</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-success" id="btn-t">Enviar</button>
+        </form>
       </div>
     </div>
-    <script>
-      $(document).ready(function() {
-        $("input[name=form]").on("change", function() {
-          var test = $(this).val();
-          $("form").hide();
-          $("#" + test).show();
-        });
-      });
-    </script>
+  </div>

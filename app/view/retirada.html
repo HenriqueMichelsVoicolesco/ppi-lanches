@@ -1,0 +1,28 @@
+  <div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
+    <div class="container-fluid">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-4 col-md-7 col-sm-9 col-11">
+          <div class="card">
+            <div class="card-body">
+              <h1 class="card-title text-center"><b>IFFar | Lanches</b></h1>
+              <h2 class="card-subtitle my-2 text-body text-center">Bem-Vindo!</h2>
+              <p class="text-justify">Digite sua matrícula ou passe sua tag para <b>retirar</b> o lanche</p>
+              <form id="form-retirada" class="needs-validation mb-2" data-metodo="retirada" novalidate>
+                <div class="form-group"> <label for="matricula">Matrícula</label> <input type="number" class="form-control" placeholder="Insira sua matricula" required minlength="10" maxlength="10" name="matricula" id="matricula" autofocus></div>
+                <button type="submit" class="btn btn-success btn-block">Retirar</button>
+              </form>
+              <a class="btn btn-link float-right" href="?pagina=home" role="button">Voltar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="modal" class="modal-resultado">
+    <div class="w-75">
+      <h1 id="identificacao" class="display-3 text-white"></h1>
+      <hr>
+      <p id="mensagem" class="h1 text-white text-center"></p>
+    </div>
+  </div>
+

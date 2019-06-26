@@ -1,0 +1,26 @@
+.modal-resultado{
+  top: 0; 
+  left: 0;
+  position: absolute;
+  z-index: 999;
+  background-color: #4CAF50;
+  height: 100vh;
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap; 
+  align-content: center;
+}
+
+.modal-resultado p{
+  text-align: left;
+}
+
+#identificacao {
+  text-align: center;
+}
+
+.modal-resultado hr{
+    border: 2px solid white;
+}

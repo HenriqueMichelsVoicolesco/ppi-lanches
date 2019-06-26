@@ -22,12 +22,11 @@ require_once 'app/model/Delete.php';
 
 require_once 'lib/Connection.php';
 require_once 'lib/Session.php';
+require_once 'lib/SharedMemory.php';
 
 require_once 'vendor/autoload.php';
 
 $template = file_get_contents('app/template/base.html');
-
-$teste = new HomeController;
 
 ob_start();
 
@@ -37,6 +36,11 @@ $core->start($_GET);
 $saida = ob_get_contents();
 ob_end_clean();
 
-$templatePronto = str_replace('{{area_dinamica}}', $saida, $template);
+if(isset($_GET['ajax']) && $_GET['ajax'] == 'sim'){
+    echo $saida;
+} else {
+    $templatePronto = str_replace('{{area_dinamica}}', $saida, $template);
+    
+    echo $templatePronto;
+}
 
-echo $templatePronto;

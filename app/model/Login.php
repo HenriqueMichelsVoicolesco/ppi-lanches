@@ -3,32 +3,29 @@
 class Login
 {
 
-	public static function logar($dadosLogin)
+	public function logar($dadosLogin)
 	{
 
 		$con = Connection::getConn();
 
 		$query = 'SELECT
-		    nome
+		    nome,
+			senha
 	    FROM
 		    servidores
 		WHERE
-			email = ?
-		AND
-			senha = ?';
+			email = ?';
 
 		$stmt = $con->prepare($query);
-		$stmt->bindValue('1', $dadosLogin['email']);
-		$stmt->bindValue('2', $dadosLogin['senha']);
+		$stmt->bindParam('1', $dadosLogin['email']);
 
 		$stmt->execute();
 
 		$selectedRows = $stmt->rowCount();
 		$resultado = $stmt->fetchObject('Login');
 
-		if ($selectedRows > 0) {
-			$_SESSION['nome'] = serialize($resultado);
-			return true;
+		if ($selectedRows > 0 && password_verify($dadosLogin['senha'], $resultado->senha)) {
+			$_SESSION['nome'] = serialize($resultado->nome);
 		}
 
 		return true;

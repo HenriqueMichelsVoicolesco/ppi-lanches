@@ -10,8 +10,11 @@ class DeleteController
 
             Session::verificaLogin();
 
-            Delete::deletarAluno($params);
-            header('Location: ?pagina=admin&operacao=deletado');
+            $status = new Delete;
+            $status = $status->deletarAluno($params);
+
+            header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -24,8 +27,11 @@ class DeleteController
 
             Session::verificaLogin();
 
-            Delete::deletarServidor($params);
-            header('Location: ?pagina=admin&operacao=deletado');
+            $status = new Delete;
+            $status = $status->deletarServidor($params);
+
+            header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -38,8 +44,11 @@ class DeleteController
 
             Session::verificaLogin();
 
-            Delete::deletarTurma($params);
-            header('Location: ?pagina=admin&operacao=deletado');
+            $status = new Delete;
+            $status = $status->deletarTurma($params);
+
+            header("Location: ?pagina=read&metodo=turmas&operacao=$status");
+            exit;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
