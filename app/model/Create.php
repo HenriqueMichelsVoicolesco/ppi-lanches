@@ -212,27 +212,33 @@ class Create
 				$stmt->execute();
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Pedido de lanche cadastrado!');
+				echo "reservado_com_sucesso"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] != null)) {
 				//Se estiver dentro do horário de inserção e do dia de ganha lanche, e já houver uma reserva no dia então imprime que já há um pedido de lanche
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi requisitado!");
+				echo "lanche_ja_reservado"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
 				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+				echo "lancha_ja_retirado"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
 				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
+				echo "dia_invalido"; //mensagem ao NODEMCU/ARDUINO
 			} else {
 				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
+				echo "fora_do_horario"; //mensagem ao NODEMCU/ARDUINO
 			}
 
 			//Se não encontrar um registro com o rfid então quer dizer que não há um usuário cadastrado
 		} else {
-			$resultado = array('identificacao' => $rfid, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
+			$resultado = array('identificacao' => $rfid, 'mensagem' => "Código não encontrado! Certifique-se de possuir um cadastro.");
+			echo "codigo_invalido"; //mensagem ao NODEMCU/ARDUINO
 		}
 
 		$key = strlen('reserva');
@@ -329,7 +335,7 @@ class Create
 
 				$stmt->execute();
 
-				echo json_encode(array('identificacao' => $aluno['nome'], 'mensagem' => 'Pedido de lanche cadastrado!'));
+				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Pedido de lanche cadastrado!');
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $reserva_de && $data_atual < $reserva_ate) && ($verificacaoRegistros['timestamp_reserva'] != null)) {
 				//Se estiver dentro do horário de inserção e do dia de ganha lanche, e já houver uma reserva no dia então imprime que já há um pedido de lanche
 
@@ -448,27 +454,33 @@ class Create
 				$stmt->execute();
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Lanche retirado!');
+				echo "retirado_com_sucesso"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] == null)) {
 				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e não houver nenhum registro de reserva do dia então imprime que não se pode retirar o lanche sem pedir
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "Não é possível retirar sem pedir o lanche!");
+				echo "lanche_nao_reservado"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) !== false && ($data_atual > $retirada_de && $data_atual < $retirada_ate) && ($verificacaoRegistros['timestamp_reserva'] != null && $verificacaoRegistros['timestamp_retirada'] != null)) {
 				//Se estiver dentro do horário de retirada e do dia de ganha lanche, e já houver uma reserva e uma retirada então imprime que já retiraram o lanche
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => "O lanche de hoje já foi retirado!");
+				echo "lancha_ja_retirado"; //mensagem ao NODEMCU/ARDUINO
 			} elseif (strpos($aluno['dias_lanche'], $dias_semana[$num_dia_semana]) === false) {
 				//Se o usuário tentar reservar o lanche e não for em um dia que ele ganha então será impresso uma mensagem
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => 'Dia invalido, os seus dias de lanche sao ' . str_replace(',', ', ', $aluno['dias_lanche']));
+				echo "dia_invalido"; //mensagem ao NODEMCU/ARDUINO
 			} else {
 				//Se nenhum dos casos for verdadeiro então significa que o problema está no horário, não está dentro do horário de reserva ou retirada
 
 				$resultado = array('identificacao' => $aluno['nome'], 'mensagem' => /*"Horário inválido: {$data_atual->format('H:i:s')}! <br>*/ "Você deve solicitar o lanche entre {$reserva_de->format('H:i:s')} - {$reserva_ate->format('H:i:s')} e retirar entre {$retirada_de->format('H:i:s')} - {$retirada_ate->format('H:i:s')}.");
+				echo "fora_do_horario"; //mensagem ao NODEMCU/ARDUINO
 			}
 
 			//Se não encontrar um registro com o rfid então quer dizer que não há um usuário cadastrado
 		} else {
-			$resultado = array('identificacao' => $rfid, 'mensagem' => "Matrícula não encontrada! Certifique-se de possuir um cadastro.");
+			$resultado = array('identificacao' => $rfid, 'mensagem' => "Código não encontrada! Certifique-se de possuir um cadastro.");
+			echo "codigo_invalido"; //mensagem ao NODEMCU/ARDUINO
 		}
 
 		$key = strlen('retirada');
