@@ -3,23 +3,23 @@
 class ErroController
 {
 
-	public function index()
+	public function index($params)
 	{
 
-		try {
+		$mensagemErro = new Erro;
+		$mensagemErro = $mensagemErro->retornarMensagem($params);
 
-			$loader = new \Twig\Loader\FilesystemLoader('app/view');
-			$twig = new \Twig\Environment($loader);
+		$loader = new \Twig\Loader\FilesystemLoader('app/view');
+		$twig = new \Twig\Environment($loader);
 
-			$variaveis = [];
+		$variaveis = [];
 
-			$template = $twig->load('erro.html');
+		$template = $twig->load('erro.html');
 
-			$conteudo = $template->render($variaveis);
+		$variaveis['erro'] = $mensagemErro;
 
-			echo $conteudo;
-		} catch (Exception $e) {
-			echo $e->getMessage();
-		}
+		$conteudo = $template->render($variaveis);
+
+		echo $conteudo;
 	}
 }

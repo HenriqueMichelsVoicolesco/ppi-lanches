@@ -24,8 +24,9 @@ class CreateController
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -41,8 +42,9 @@ class CreateController
 
             header("Location: ?pagina=create&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -58,8 +60,9 @@ class CreateController
 
             header("Location: ?pagina=create&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -75,8 +78,9 @@ class CreateController
 
             header("Location: ?pagina=create&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -128,6 +132,23 @@ class CreateController
             $registro->retirarLancheMatricula($params);
         } catch (Exception $e) {
             echo $e->getMessage();
+        }
+    }
+
+    public function relatorio()
+    {
+
+        try {
+            $relatorio = new Read;
+
+            $relatorio = $relatorio->gerarRelatorio($_POST);
+            
+            $nome_arquivo = "relatorio_lanche_{$_POST['relatorio_de']}_{$_POST['relatorio_ate']}";    
+
+            Relatorio::gerarTabela($relatorio, $nome_arquivo);
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 }

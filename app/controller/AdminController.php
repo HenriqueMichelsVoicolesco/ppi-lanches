@@ -17,16 +17,16 @@ class AdminController
                 $template = $twig->load('admin.html');
                 $variaveis['nome'] = unserialize($_SESSION['nome']);
             } else {
-                $template = $twig->load('login.html');
-
-                $variaveis['dados'] = 'erro';
+                header('Location: ?pagina=home&metodo=login');
+                exit;
             }
 
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 

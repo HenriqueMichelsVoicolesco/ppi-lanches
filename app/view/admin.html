@@ -1,15 +1,14 @@
 <nav class="navbar navbar-dark bg-dark sticky-top">
-  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="#">
-      <i class="fa d-inline fa-lg fa-circle-o"></i>
-      <b> IFFar</b>
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand d-flex justify-content-center" href="?pagina=admin">
+      <img src="app/images/iffar-hori.svg" class="ml-3" width="60%" alt="Instituto Federal Farroupilha">
     </a> </div>
 </nav>
 <div class="py-5 text-center">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1 class="text-light">Bem-Vindo {{nome}}! <a class="text-light"
-            href="?pagina=admin&metodo=logout"><u>SAIR</u></a></h1>
+        <h1 class="text-light">Bem-Vindo {{nome}}! <a class="btn btn-light btn-lg"
+            href="?pagina=admin&metodo=logout">SAIR</a></h1>
       </div>
     </div>
   </div>
@@ -17,14 +16,15 @@
 <div class="py-3 bg-light h-100">
   <div class="container text-center">
     <div class="row">
-      <div class="p-4 col-md-12 border border-info mb-3" id="contador">
-        <h4> <b>Contador de Lanches</b></h4>
-        <p id="num_contador">-</p>
+      <div class="p-4 col-md-12 border border-info mb-3">
+        <h4 class="mb-3"><b>Contador de Lanches</b></h4>
+        <div class="row justify-content-md-center" id="contador">
+        </div>
       </div>
       <div class="p-4 col-md-6 border border-info">
         <h4> <b>Exibir Registros</b></h4>
         <p>Mostrar lista com todos os alunos que pediram lanche hoje.</p><a class="btn btn-success"
-          href="?pagina=read">Exibir</a>
+          href="?pagina=read&metodo=registros">Exibir</a>
       </div>
       <div class="p-4 col-md-6 border border-info">
         <h4> <b>Adicionar Alunos/Servidores/Turmas</b></h4>
@@ -40,6 +40,15 @@
         <h4> <b>Modificar Alunos/Servidores</b></h4>
         <p>Editar dados dos alunos e servidores. Ex: Nome, Matrícula, Email...</p><a class="btn btn-success"
           href="?pagina=read&metodo=usuarios">Modificar</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="py-3 bg-light" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p class="mb-0">© 2019 Henrique Michels Voicolesco. Todos os direitos reservados</p>
       </div>
     </div>
   </div>

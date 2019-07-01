@@ -1,12 +1,18 @@
 <nav class="navbar navbar-dark bg-dark sticky-top">
-  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="?pagina=admin">
-      <i class="fa d-inline fa-lg fa-circle-o"></i>
-      <b> IFFar</b>
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand d-flex justify-content-center" href="?pagina=admin">
+      <img src="app/images/iffar-hori.svg" class="ml-3" width="60%" alt="Instituto Federal Farroupilha">
     </a> </div>
 </nav>
 {% if operacao == 'atualizado' %}
 <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
   Registro atualizado com sucesso!
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% elseif operacao == 'deletado' %}
+<div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+  Registro deletado com sucesso!
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -81,6 +87,15 @@
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="py-3 bg-light" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p class="mb-0">© 2019 Henrique Michels Voicolesco. Todos os direitos reservados</p>
       </div>
     </div>
   </div>

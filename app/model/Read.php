@@ -10,13 +10,19 @@ class Read
 		$data_atual = new DateTime();
 
 		$query = 'SELECT 
-			COUNT(matricula_aluno)
+			turmas.curso,
+			turmas.semestre,
+			turmas.modalidade,
+			COUNT(registros.matricula_aluno)
 		AS
 			num_registros
 		FROM
 			registros
+		INNER JOIN turmas ON(turma_aluno = id_turma)
 		WHERE
-			DATE(timestamp_reserva) = ?;';
+			DATE(timestamp_reserva) = ?
+		GROUP BY turmas.id_turma
+		ORDER BY turmas.curso ASC, turmas.semestre ASC;';
 
 		$stmt = $con->prepare($query);
 		$stmt->bindValue('1', $data_atual->format('Y-m-d'));
@@ -25,9 +31,11 @@ class Read
 
 		$resultado = [];
 
-		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+		while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+			$resultado[] = $row;
+		}
 
-		return $row;
+		return $resultado;
 	}
 
 	public function selecionarRegistros()
@@ -41,6 +49,7 @@ class Read
 			registros.id_registro,
 			registros.codigo_aluno,
 			registros.matricula_aluno,
+			registros.turma_aluno,
 			alunos.nome,
 			turmas.curso,
 			registros.timestamp_reserva,
@@ -67,6 +76,26 @@ class Read
 		return $resultado;
 	}
 
+	public function selecionarIntervaloRegistros()
+	{
+
+		$con = Connection::getConn();
+
+		$query = 'SELECT
+			MIN(DATE(timestamp_reserva)) AS menor_data,
+			MAX(DATE(timestamp_retirada)) AS maior_data
+		FROM
+			registros;';
+
+		$stmt = $con->prepare($query);
+
+		$stmt->execute();
+		
+		$resultado = $stmt->fetchObject('Read');
+
+		return $resultado;
+	}
+
 	public function selecionarTurmas()
 	{
 
@@ -76,7 +105,7 @@ class Read
 		FROM
 			turmas
 		ORDER BY
-    		curso ASC;';
+    		curso ASC, semestre ASC;';
 
 		$stmt = $con->prepare($query);
 
@@ -206,6 +235,50 @@ class Read
 
 		$stmt = $con->prepare($query);
 		$stmt->bindValue('1', $params);
+		$stmt->execute();
+
+		$resultado = [];
+
+		while ($row = $stmt->fetchObject('Read')) {
+			$resultado[] = $row;
+		}
+
+		return $resultado;
+	}
+
+	public function gerarRelatorio($params)
+	{
+		$con = Connection::getConn();
+
+		if($params['relatorio_de'] < $params['relatorio_ate']){
+			$relatorio_de = $params['relatorio_de'];
+			$relatorio_ate = $params['relatorio_ate'];
+		} else if ($params['relatorio_de'] > $params['relatorio_ate']) {
+			$relatorio_de = $params['relatorio_ate'];
+			$relatorio_ate = $params['relatorio_de'];
+		} else {
+			$relatorio_de = $params['relatorio_de'];
+			$relatorio_ate = $params['relatorio_ate'];
+		}
+
+		$query = 'SELECT
+			registros.id_registro AS Id,
+			registros.codigo_aluno AS "Código RFID",
+			registros.matricula_aluno AS Matrícula,
+			alunos.nome AS Nome,
+			turmas.curso AS Curso,
+			registros.timestamp_reserva AS Reserva,
+			registros.timestamp_retirada AS Retirada
+		FROM
+			registros
+		INNER JOIN alunos ON(matricula_aluno = matricula)
+		INNER JOIN turmas ON(turma_aluno = id_turma)
+		WHERE
+			DATE(timestamp_reserva) >= ? AND DATE(timestamp_retirada) <= ?';
+
+		$stmt = $con->prepare($query);
+		$stmt->bindValue('1', $relatorio_de);
+		$stmt->bindValue('2', $relatorio_ate);
 		$stmt->execute();
 
 		$resultado = [];

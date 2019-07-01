@@ -83,6 +83,16 @@ class Update
 		$retirada_de = new DateTime($dadosTurma['retirada_de']);
 		$retirada_ate = new DateTime($dadosTurma['retirada_ate']);
 
+		if ($reserva_ate < $reserva_de) {
+			$reserva_de = new DateTime($dadosTurma['reserva_ate']);
+			$reserva_ate = new DateTime($dadosTurma['reserva_de']);
+		}
+
+		if ($retirada_ate < $retirada_de) {
+			$retirada_de = new DateTime($dadosTurma['retirada_ate']);
+			$retirada_ate = new DateTime($dadosTurma['retirada_de']);
+		}
+
 		$query = 'UPDATE
 			turmas
 		SET

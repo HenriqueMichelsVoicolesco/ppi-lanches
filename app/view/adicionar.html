@@ -1,10 +1,9 @@
 <nav class="navbar navbar-dark bg-dark sticky-top">
-  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="?pagina=admin">
-      <i class="fa d-inline fa-lg fa-circle-o"></i>
-      <b> IFFar</b>
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand d-flex justify-content-center" href="?pagina=admin">
+      <img src="app/images/iffar-hori.svg" class="ml-3" width="60%" alt="Instituto Federal Farroupilha">
     </a> </div>
 </nav>
-{% if operacao == 'criado' %}
+{% if operacao == 'cadastrado' %}
 <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
   Registro inserido com sucesso!
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -69,11 +68,11 @@
               value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.matricula}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="nome_aluno">Nome</label> <input type="text" class="form-control"
-              placeholder="Insira o nome" required name="nome_aluno" id="nome_aluno"
+              placeholder="Insira o nome" required name="nome_aluno" id="nome_aluno" maxlength="255"
               value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.nome}}{% endfor %}{% endif %}">
           </div>
-          <div class="form-group"> <label for="rfid">RFID</label> <input type="text" class="form-control"
-              placeholder="Insira o código" id="rfid" name="rfid"
+          <div class="form-group"> <label for="rfid">Código RFID</label> <input type="text" class="form-control"
+              placeholder="Insira o código" id="rfid" name="rfid" minlength="8" maxlength="8"
               value="{% if dadosAluno == true %}{% for dadosA in dadosAluno %}{{dadosA.codigo}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="turma">Turma</label> <select class="form-control custom-select" required
@@ -92,11 +91,11 @@
           {% if dadosServidor == true %} <input type="hidden" name="id_servidor"
             value="{% for dadosS in dadosServidor %}{{dadosS.id_servidor}}{% endfor %}"> {% endif %}
           <div class="form-group"> <label for="email">Email</label> <input type="email" class="form-control"
-              placeholder="Insira o email" required name="email" id="email"
+              placeholder="Insira o email" required name="email" id="email" maxlength="255"
               value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.email}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="nome_servidor">Nome</label> <input type="text" class="form-control"
-              placeholder="Insira o nome do servidor" required name="nome_servidor" id="nome_servidor"
+              placeholder="Insira o nome do servidor" required name="nome_servidor" id="nome_servidor" maxlength="255"
               value="{% if dadosServidor == true %}{% for dadosS in dadosServidor %}{{dadosS.nome}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="senha">Senha</label> <input type="password" class="form-control"
@@ -110,18 +109,18 @@
           {% if dadosTurma == true %} <input type="hidden" name="id_turma"
             value="{% for dadosT in dadosTurma %}{{dadosT.id_turma}}{% endfor %}"> {% endif %}
           <div class="form-group"> <label for="curso">Curso</label> <input type="text" class="form-control"
-              placeholder="Insira o nome do curso" required name="curso" id="curso"
+              placeholder="Insira o nome do curso" required name="curso" id="curso" maxlength="255"
               value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.curso}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="semestre">Semestre</label> <input type="text" class="form-control"
-              placeholder="Insira o semestre" required name="semestre" id="semestre"
+              placeholder="Insira o semestre" required name="semestre" id="semestre" maxlength="255"
               value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.semestre}}{% endfor %}{% endif %}">
           </div>
           <div class="form-group"> <label for="modalidade">Modalidade</label> <input type="text" class="form-control"
-              placeholder="Insira a modalidade" id="modalidade" name="modalidade" required
+              placeholder="Insira a modalidade" id="modalidade" name="modalidade" required maxlength="255"
               value="{% if dadosTurma == true %}{% for dadosT in dadosTurma %}{{dadosT.modalidade}}{% endfor %}{% endif %}">
           </div>
-          <div class="form-group"> <label for="modalidade">Reserva</label>
+          <div class="form-group"> <label for="">Reserva</label>
             <div class="row d-flex justify-content-center">
               <div class="col-md-5 col-5"><input type="time" class="form-control"
                   placeholder="Insira o horário do início das reservas dos lanches" id="reserva_de" name="reserva_de"
@@ -136,7 +135,7 @@
               </div>
             </div>
           </div>
-          <div class="form-group"> <label for="modalidade">Retirada</label>
+          <div class="form-group"> <label for="">Retirada</label>
             <div class="row d-flex justify-content-center">
               <div class="col-md-5 col-5"><input type="time" class="form-control"
                   placeholder="Insira o horário do início das retiradas dos lanches" id="retirada_de" name="retirada_de"
@@ -151,7 +150,14 @@
               </div>
             </div>
           </div>
-          <div class="form-group"> <label for="segunda">Dias do lanche</label>
+          <div class="form-group"> <label for="">Dias do lanche</label>
+            <div class="custom-control custom-checkbox" id="group-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="domingo" name="diasLanche[]"
+                value="Domingo" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Domingo' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="domingo">Domingo</label>
+            </div>
             <div class="custom-control custom-checkbox" id="group-checkbox">
               <input type="checkbox" class="custom-control-input teste" id="segunda" name="diasLanche[]"
                 value="Segunda-Feira" required
@@ -187,9 +193,26 @@
                 checked {% endif %}{% endfor %}{% endif %}>
               <label class="custom-control-label" for="sexta">Sexta-Feira</label>
             </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input teste" id="sabado" name="diasLanche[]"
+                value="Sábado" required
+                {% if dadosTurma == true %}{% for dadosT in dadosTurma %}{% if 'Sábado' in dadosT.dias_lanche %}
+                checked {% endif %}{% endfor %}{% endif %}>
+              <label class="custom-control-label" for="sabado">Sábado</label>
+            </div>
           </div>
           <button type="submit" class="btn btn-success" id="btn-t">Enviar</button>
         </form>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="py-3 bg-light" >
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <p class="mb-0">© 2019 Henrique Michels Voicolesco. Todos os direitos reservados</p>
+        </div>
       </div>
     </div>
   </div>

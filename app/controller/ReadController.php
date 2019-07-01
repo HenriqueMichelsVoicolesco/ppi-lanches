@@ -3,7 +3,7 @@
 class ReadController
 {
 
-    public function index()
+    public function registros()
     {
 
         try {
@@ -11,7 +11,9 @@ class ReadController
             Session::verificaLogin();
 
             $dados = new Read;
-            $dados = $dados->selecionarRegistros();
+            $dadosTurmas = $dados->selecionarTurmas();
+            $dadosRegistros = $dados->selecionarRegistros();
+            $dadosIntervaloRegistros = $dados->selecionarIntervaloRegistros();
 
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
@@ -20,17 +22,21 @@ class ReadController
 
             $template = $twig->load('registros.html');
 
-            $variaveis['dados'] = $dados;
+            $variaveis['dadosTurmas'] = $dadosTurmas;
+            $variaveis['dadosRegistros'] = $dadosRegistros;
+            $variaveis['dadosIntervaloRegistros'] = $dadosIntervaloRegistros;
 
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
-    public function turmas(){
+    public function turmas()
+    {
 
         try {
 
@@ -47,17 +53,19 @@ class ReadController
             $template = $twig->load('turmas.html');
 
             $variaveis['dados'] = $dados;
-            $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
+            $variaveis['operacao'] = $_GET['operacao'] ?? null;
 
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
-    public function usuarios(){
+    public function usuarios()
+    {
 
         try {
             Session::verificaLogin();
@@ -77,18 +85,20 @@ class ReadController
             $variaveis['dadosAluno'] = $dadosAlunos;
             $variaveis['dadosServidor'] = $dadosServidores;
             $variaveis['dadosTurma'] = $dadosTurmas;
-            $variaveis['operacao'] = isset($_GET['operacao']) ? $_GET['operacao'] : null;
+            $variaveis['operacao'] = $_GET['operacao'] ?? null;
 
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
-    public function numRegistros(){
-        
+    public function numRegistros()
+    {
+
         try {
 
             $numRegistros = new Read;
@@ -96,31 +106,36 @@ class ReadController
             $numRegistros = $numRegistros->numeroRegistros();
 
             echo json_encode($numRegistros);
-            
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    } 
-
-    public function respostaReserva(){
-        try {
-
-            $key = strlen('reserva');
-
-            SharedMemory::read($key);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    public function respostaRetirada(){
+    public function respostaReserva()
+    {
         try {
 
-            $key = strlen('retirada');
-
+            //cria o nome da memoria como o tamanho da palavra
+            $key = strlen('reserva');
+            //chama a função passando a mensagem e a chave
             SharedMemory::read($key);
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
+        }
+    }
+
+    public function respostaRetirada()
+    {
+        try {
+
+            //cria o nome da memoria como o tamanho da palavra
+            $key = strlen('retirada');
+            //chama a função passando a mensagem e a chave
+            SharedMemory::read($key);
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 }

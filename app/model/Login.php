@@ -26,8 +26,9 @@ class Login
 
 		if ($selectedRows > 0 && password_verify($dadosLogin['senha'], $resultado->senha)) {
 			$_SESSION['nome'] = serialize($resultado->nome);
+			return true;
 		}
-
-		return true;
+		
+		return 'erro';
 	}
 }

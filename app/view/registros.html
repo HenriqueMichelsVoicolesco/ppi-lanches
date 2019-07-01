@@ -1,7 +1,6 @@
 <nav class="navbar navbar-dark bg-dark sticky-top">
-  <div class="container d-flex justify-content-center"> <a class="navbar-brand" href="?pagina=admin">
-      <i class="fa d-inline fa-lg fa-circle-o"></i>
-      <b> IFFar</b>
+  <div class="container d-flex justify-content-center"> <a class="navbar-brand d-flex justify-content-center" href="?pagina=admin">
+      <img src="app/images/iffar-hori.svg" class="ml-3" width="60%" alt="Instituto Federal Farroupilha">
     </a> </div>
 </nav>
 <div class="py-5 text-center">
@@ -20,42 +19,114 @@
         <h4><b>Lista dos alunos que requisitaram lanche no dia de hoje</b><br></h4>
       </div>
     </div>
+    
     <div class="row">
       <div class="col-md-12">
-        <div class="table-responsive">
-          <table class="table table-striped table-borderless">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Código RFID</th>
-                <th scope="col">Matrícula</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Curso</th>
-                <th scope="col">Horário de reserva</th>
-                <th scope="col">Horário de retirada</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% if dados == false %}
-              <tr>
-                <th scope="row" colspan="7" style="text-align: center;">Não foi encontrado nenhum registro referente ao dia de hoje!</th>
-              </tr>
-              {% else %}
-              {% for registros in dados %}
-              <tr>
-                <th scope="row">{{registros.id_registro}}</th>
-                <td>{{registros.codigo_aluno}}</td>
-                <td>{{registros.matricula_aluno}}</td>
-                <td>{{registros.nome}}</td>
-                <td>{{registros.curso}}</td>
-                <td>{{registros.timestamp_reserva}}</td>
-                <td>{{registros.timestamp_retirada}}</td>
-              </tr>
-              {% endfor %}
-              {% endif %}
-            </tbody>
-          </table>
+        <div class="accordion" id="accordionExample">
+          <div id="accordion">
+              <div class="card mb-3">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> Gerar Relatórios</button></h5>
+                </div>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  <div class="card-body">
+                      <div class="row text-center">
+                          <div class="col-md-12">
+                            <p>Insira a data inicial e a data final para gerar o relatório em formato de planilha.</p>
+                            <form action="?pagina=create&metodo=relatorio" method="POST" class="needs-validation" novalidate>
+                              <div class="form-group">
+                                <div class="row d-flex justify-content-center">
+                                  <div class="col-md-5 col-5"><input type="date" class="form-control" id="relatorio_de" name="relatorio_de"
+                                      required min="{{dadosIntervaloRegistros.menor_data}}" max="{{dadosIntervaloRegistros.maior_data}}">
+                                  </div>
+                                  <div class="col-md-2 d-flex align-items-center justify-content-center col-2">-</div>
+                                  <div class="col-md-5 col-5"><input type="date" class="form-control" id="relatorio_ate" name="relatorio_ate"
+                                    required min="{{dadosIntervaloRegistros.menor_data}}" max="{{dadosIntervaloRegistros.maior_data}}">
+                                  </div>
+                                </div>
+                              </div>
+                              <button type="submit" class="btn btn-success btn-block" id="btn-t">Gerar</button>
+                            </form>
+                          </div>
+                        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% for turma in dadosTurmas %}
+          <div id="accordion">
+            <div class="card mb-3">
+              <div class="card-header" id="heading{{turma.id_turma}}">
+                <h5 class="mb-0">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                    data-target="#collapse{{turma.id_turma}}" aria-expanded="false"
+                    aria-controls="collapse{{turma.id_turma}}"> {{turma.curso}} - {{turma.modalidade}} -
+                    {{turma.semestre}}</button>
+                </h5>
+              </div>
+              <div id="collapse{{turma.id_turma}}" class="collapse" aria-labelledby="heading{{turma.id_turma}}"
+                data-parent="#accordionExample">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-striped table-borderless">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Código RFID</th>
+                          <th scope="col">Matrícula</th>
+                          <th scope="col">Nome</th>
+                          <th scope="col">Curso</th>
+                          <th scope="col">Horário de reserva</th>
+                          <th scope="col">Horário de retirada</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+
+                        {% set temRegistros = false %}
+
+                        {% for registro in dadosRegistros %}
+                        {% if turma.id_turma == registro.turma_aluno %}
+                        <tr>
+                          <th scope="row">{{registro.id_registro}}</th>
+                          <td>{{registro.codigo_aluno}}</td>
+                          <td>{{registro.matricula_aluno}}</td>
+                          <td>{{registro.nome}}</td>
+                          <td>{{registro.curso}}</td>
+                          <td>{{registro.timestamp_reserva}}</td>
+                          <td>{{registro.timestamp_retirada}}</td>
+                        </tr>
+                        {% set temRegistros = true %}
+
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if not temRegistros %}
+                        <tr>
+                          <th scope="row" colspan="7" style="text-align: center;">Não foi encontrado nenhum registro
+                            referente ao
+                            dia de hoje!</th>
+                        </tr>
+                        {% endif %}
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="py-3 bg-light" >
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p class="mb-0">© 2019 Henrique Michels Voicolesco. Todos os direitos reservados</p>
       </div>
     </div>
   </div>

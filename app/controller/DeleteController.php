@@ -15,8 +15,9 @@ class DeleteController
 
             header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -32,8 +33,9 @@ class DeleteController
 
             header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -49,8 +51,9 @@ class DeleteController
 
             header("Location: ?pagina=read&metodo=turmas&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 }

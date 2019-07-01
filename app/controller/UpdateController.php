@@ -2,17 +2,17 @@
 
 class UpdateController
 {
-    
+
     public function formAluno($params)
     {
         try {
-            
+
             Session::verificaLogin();
-            
+
             $dados = new Read;
             $dadosTurma = $dados->selecionarTurmas();
             $dadosAluno = $dados->selecionarAlunoPorId($params);
-            
+
             $loader = new \Twig\Loader\FilesystemLoader('app/view');
             $twig = new \Twig\Environment($loader);
 
@@ -25,8 +25,9 @@ class UpdateController
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -50,8 +51,9 @@ class UpdateController
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -74,8 +76,9 @@ class UpdateController
             $conteudo = $template->render($variaveis);
 
             echo $conteudo;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -90,11 +93,12 @@ class UpdateController
 
             header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
-    
+
     public function salvarEdicaoServidor()
     {
 
@@ -106,11 +110,12 @@ class UpdateController
 
             header("Location: ?pagina=read&metodo=usuarios&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
-    
+
     public function salvarEdicaoTurma()
     {
 
@@ -119,11 +124,12 @@ class UpdateController
             $status = new Update;
 
             $status = $status->atualizarTurma($_POST);
-           
+
             header("Location: ?pagina=read&metodo=turmas&operacao=$status");
             exit;
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 }

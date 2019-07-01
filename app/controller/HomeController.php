@@ -24,8 +24,9 @@ class HomeController
                 header('Location: ?pagina=admin');
                 exit;
             }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -46,9 +47,13 @@ class HomeController
                 $conteudo = $template->render($variaveis);
 
                 echo $conteudo;
+            } else {
+                header('Location: ?pagina=admin');
+                exit;
             }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -69,9 +74,13 @@ class HomeController
                 $conteudo = $template->render($variaveis);
 
                 echo $conteudo;
+            } else {
+                header('Location: ?pagina=admin');
+                exit;
             }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -89,6 +98,7 @@ class HomeController
 
                 $template = $twig->load('login.html');
 
+                $variaveis['operacao'] = $_GET['operacao'] ?? null;
                 $conteudo = $template->render($variaveis);
 
                 echo $conteudo;
@@ -96,8 +106,9 @@ class HomeController
                 header('Location: ?pagina=admin');
                 exit;
             }
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 
@@ -107,16 +118,17 @@ class HomeController
         try {
             $status = new Login;
             $status = $status->logar($_POST);
-
-            if ($status) {
-                header('Location: ?pagina=admin');
+            var_dump($status);
+            if ($status === 'erro') {
+                header("Location: ?pagina=home&metodo=login&operacao=$status");
                 exit;
             } else {
-                self::index();
+                header('Location: ?pagina=admin');
+                exit;
             }
-            
-        } catch (Exception $e) {
-            echo $e->getMessage();
+        } catch (Error $e) {
+            header('Location: ?pagina=error&id='. $e->getCode());
+			exit;
         }
     }
 }
