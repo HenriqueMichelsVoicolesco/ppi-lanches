@@ -50,7 +50,6 @@ if ($("#contador").length) {
       dataType: "JSON",
       success: function (result) {
         var contador = '';
-        console.log(result);
         if (result != 0) {
           $.each(result, function (index, data) {
             contador += '<div class="col-lg-5"><p>' + data.curso + ' - ' + data.semestre + ' - ' + data.modalidade + ': ' + data.num_registros + '</p></div>';
@@ -59,7 +58,10 @@ if ($("#contador").length) {
           contador += '<div class="col-lg-5"><p> Nenhuma turma requisitou lanche hoje! </p></div>';
         }
         $("#contador").html(contador);
-      }//, error: function (jqXHR, exception) {
+      }
+      // [debug] se ocorrer um erro exibe-o como 
+      // tabela no console do navegador
+      //, error: function (jqXHR, exception) {
       //   var msg = '';
       //   if (jqXHR.status === 0) {
       //     msg = 'Not connected.\n Verify Network.';
@@ -156,8 +158,8 @@ function ajaxReturn() {
       stopTimer();
       display(response);
     }
-    // //se ocorrer um erro exibe-o como 
-    // //tabela no console do navegador
+    // [debug] se ocorrer um erro exibe-o como 
+    // tabela no console do navegador
     // ,error: function (jqXHR, exception) {
     //   var msg = '';
     //   if (jqXHR.status === 0) {
