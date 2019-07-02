@@ -13,7 +13,7 @@ abstract class Relatorio
         header("Cache-Control: no-cache, must-revalidate");
         header("Pragma: no-cache");
         header("Content-type: application/csv; charset=utf-8;");
-        header("Content-Disposition: attachment; filename='$arquivo'");
+        header("Content-Disposition: attachment; filename=$arquivo;");
         header("Content-Description: PHP Generated Data");
         
         //pega os indices do objeto pra serem a primeira linha
