@@ -144,7 +144,7 @@ class CreateController
             $relatorio = $relatorio->gerarRelatorio($_POST);
             
             $nome_arquivo = "relatorio_lanche_{$_POST['relatorio_de']}_{$_POST['relatorio_ate']}";    
-
+            
             Relatorio::gerarTabela($relatorio, $nome_arquivo);
         } catch (Error $e) {
             header('Location: ?pagina=error&id='. $e->getCode());

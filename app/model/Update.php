@@ -29,9 +29,7 @@ class Update
 		$stmt->execute();
 
 		$affectedRows = $stmt->rowCount();
-
-		var_dump($affectedRows);
-
+		
 		if ($affectedRows > 0) {
 			return 'atualizado';
 		}
@@ -121,6 +119,11 @@ class Update
 
 		$stmt->execute();
 
-		return 'atualizado';
+		$affectedRows = $stmt->rowCount();
+
+		if ($affectedRows > 0) {
+			return 'atualizado';
+		}
+		return 'erro';
 	}
 }

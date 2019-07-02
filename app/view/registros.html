@@ -33,6 +33,7 @@
                   <div class="card-body">
                       <div class="row text-center">
                           <div class="col-md-12">
+                            {% if (dadosIntervaloRegistros.menor_data == true) and (dadosIntervaloRegistros.maior_data == true) %}
                             <p>Insira a data inicial e a data final para gerar o relatório em formato de planilha.</p>
                             <form action="?pagina=create&metodo=relatorio" method="POST" class="needs-validation" novalidate>
                               <div class="form-group">
@@ -48,6 +49,9 @@
                               </div>
                               <button type="submit" class="btn btn-success btn-block" id="btn-t">Gerar</button>
                             </form>
+                            {% else %}
+                            <p>Não é possível gerar relatório sem ao menos uma reserva e uma retirada no sistema.</p>
+                            {% endif %}
                           </div>
                         </div>
                   </div>

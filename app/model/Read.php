@@ -250,15 +250,15 @@ class Read
 	{
 		$con = Connection::getConn();
 
-		if($params['relatorio_de'] < $params['relatorio_ate']){
-			$relatorio_de = $params['relatorio_de'];
-			$relatorio_ate = $params['relatorio_ate'];
-		} else if ($params['relatorio_de'] > $params['relatorio_ate']) {
-			$relatorio_de = $params['relatorio_ate'];
-			$relatorio_ate = $params['relatorio_de'];
-		} else {
-			$relatorio_de = $params['relatorio_de'];
-			$relatorio_ate = $params['relatorio_ate'];
+		$relatorio_de = new DateTime($params['relatorio_de']);
+		$relatorio_ate = new DateTime($params['relatorio_ate']);
+
+		if ($relatorio_de < $relatorio_de || $relatorio_de == $relatorio_de) {
+			$relatorio_de = $relatorio_de;
+			$relatorio_ate = $relatorio_ate;
+		} else if ($relatorio_de > $relatorio_de) {
+			$relatorio_de = new DateTime($params['relatorio_ate']);
+			$relatorio_ate = new DateTime($params['relatorio_de']);
 		}
 
 		$query = 'SELECT
@@ -277,8 +277,8 @@ class Read
 			DATE(timestamp_reserva) >= ? AND DATE(timestamp_retirada) <= ?';
 
 		$stmt = $con->prepare($query);
-		$stmt->bindValue('1', $relatorio_de);
-		$stmt->bindValue('2', $relatorio_ate);
+		$stmt->bindValue('1', $relatorio_de->format('Y-m-d'));
+		$stmt->bindValue('2', $relatorio_ate->format('Y-m-d'));
 		$stmt->execute();
 
 		$resultado = [];
